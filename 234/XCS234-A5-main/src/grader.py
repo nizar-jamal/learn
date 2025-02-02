@@ -23,7 +23,7 @@ import submission
 
 
 class Test_1a(GradedTestCase):
-    @graded(timeout=2000000, is_hidden=False)
+    @graded(timeout=2, is_hidden=False)
     def test_0(self):
         """1a-0-basic: test for fixed prediction"""
         data = load_data()
@@ -37,7 +37,7 @@ class Test_1a(GradedTestCase):
 
         self.assertEqual([prediction], np.unique(predictions))
 
-    @graded(timeout=2000000, is_hidden=False)
+    @graded(timeout=2, is_hidden=False)
     def test_1(self):
         """1a-1-basic: evaluate the performance of clincal model on a single example"""
         data = load_data()
@@ -65,7 +65,7 @@ class Test_1b(GradedTestCase):
         self.assertTrue(np.array_equal(learner.A[0], np.eye(learner.d)))
         self.assertTrue(np.array_equal(learner.b[0], np.zeros(learner.d)) or np.array_equal(learner.b[0], np.zeros((learner.d, 1))))
 
-    @graded(timeout=2000000, is_hidden=False)
+    @graded(timeout=2, is_hidden=False)
     def test_1(self):
         """1b-1-basic: evaluate the choose function of LinUCB on a single example"""
         features = [
@@ -179,7 +179,7 @@ class Test_1d(GradedTestCase):
         self.assertTrue(np.array_equal(learner.mu[0], np.zeros((learner.d))))
         self.assertTrue(np.array_equal(learner.f[0], np.zeros((learner.d))))
 
-    @graded(timeout=5000000, is_hidden=False)
+    @graded(timeout=5, is_hidden=False)
     def test_1(self):
         """1d-1-basic: basic evaluation of the choose function of Thompson Sampling on a single example"""
         features = [
