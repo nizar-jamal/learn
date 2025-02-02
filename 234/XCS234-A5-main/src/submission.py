@@ -302,9 +302,9 @@ class ThomSampB(BanditPolicy):
         self.num_arms = num_arms
         self.d = len(features)
         self.v2 = alpha
-        self.B = {a: np.eye(self.d) for a in range(num_arms)}
-        self.mu = {a: np.zeros(self.d) for a in range(num_arms)}
-        self.f = {a: np.zeros(self.d) for a in range(num_arms)}
+        self.B = [np.eye(self.d) for _ in range(num_arms)]
+        self.mu = [np.zeros(self.d) for _ in range(num_arms)]
+        self.f = [np.zeros(self.d) for a in range(num_arms)]
         ### END CODE HERE ###
 
     def extract_features(self, x):
@@ -336,9 +336,9 @@ class ThomSampB(BanditPolicy):
         xvec = self.extract_features(x)
 
         ### START CODE HERE ###
-        self.mu = {a: np.random.multivariate_normal(self.mu[a], np.linalg.inv(self.v2 * self.B[a])) for a in range(self.num_arms)}
-        a = {a: self.mu[a].dot(xvec) for a in range(self.num_arms)}
-        return max(a, key=a.get)
+        mu_tilde = [np.random.multivariate_normal(self.mu[a], self.v2 * np.linalg.inv(self.B[a])) for a in range(self.num_arms)]
+        sampled_means = [mu_tilde[a].dot(xvec) for a in range(self.num_arms)]
+        return np.argmax(sampled_means)
         ### END CODE HERE ###
 
     def update(self, x, a, r):
