@@ -1,0 +1,32 @@
+\subsection*{Implementing the arm update strategies}
+
+We will now implement three different strategies to add arms to our simulator. Each arm is associated with its true feature vector $\theta^*_a$. This is the $d$-dimensional feature vector we assigned to each arm when we initialized the simulator. This is the $\theta$ the LinUCB algorithm is trying to learn for each arm through $A$ and $b$. When we create new arms, we need to create these new feature vectors as well.
+
+\noindent
+When coming up with strategies to add arms, we need to put ourselves in the shoes of content creators and think about how we want to optimize for the videos that go up on our channels. When making such decisions, we only consider the previous $K$ steps since we added the last arm. Consider the three strategies outlined below:
+
+\begin{enumerate}[(1)]
+\item
+\textbf{Popular:} For the last $K$ steps, pick the two most popular arms and create a new arm with the mean of the true feature vectors of these two arms. For example, assume $a_1$ and $a_2$ were the two most chosen arms in the previous $K$ steps with true feature vectors $\theta_1^*$ and $\theta^*_2$ respectively. Now create a new arm $a$ with $\theta_a^* = \frac{\theta_1^* + \theta_2^*}{2}$.\\
+In the real world, this is similar to a naive approach where content creators create a new video based on their two most recommended videos from the last month.
+\item
+\textbf{Corrective:} For the last $K$ steps, consider all the users for whom we made incorrect recommendations. Assume we know what the best arm would have been for each of those users. Consider taking corrective action by creating a new arm that is the weighted mean of all these true best arms for these users. For example, say for the last $K$ steps, we got $n_1 + n_2$ predictions wrong where the true best arm was $a_1$ $n_1$ times and $a_2$ $n_2$ times. Create a new arm $a$ with $\theta_a^* = \frac{n_1\theta_1^* + n_2\theta_2^*}{n_1 + n_2}$. \\
+In the real world, this is analogous to content creators adapting their content to give their viewers what they want to watch based on feedback from viewers about their preferences.
+
+\item \textbf{Counterfactual:} Consider the following counterfactual: For the previous $K$ steps, had there existed an additional arm $a$, what would its true feature vector $\theta_a^*$ have to be so that it would have been better than the chosen arm at each of those $K$ steps? There are several ways to pose this optimization problem. Consider the following formulation:
+\begin{align}
+    \theta_a^* = \argmax_{\theta} \frac{1}{2}\sum_{i=1}^{K}(\theta^Tx_i - \theta_i^Tx_i)^2
+\end{align}
+Here $x_i$ is the context vector of the user at step $i$. $\theta_i$ is the true feature vector of the arm chosen at step $i$. We can now optimize this objective using batch gradient ascent.\\
+\begin{align}
+    \theta_a \leftarrow \theta_a + \eta \frac{\partial L}{\partial \theta}
+\end{align}
+Here $\eta$ is the learning rate and $L = \sum_{i=1}^{K}(\theta^Tx_i - \theta_i^Tx_i)^2$.\\
+We can find $\frac{\partial L}{\partial \theta}$ directly as $\sum_{i=1}^{K} (\theta^Tx_i - \theta_i^Tx_i)x_i$. We can write the update rule as \\
+\begin{align}
+    \theta_a \leftarrow \theta_a + \eta \sum_{i=1}^{K} (\theta_a^Tx_i - \theta_i^Tx_i)x_i
+\end{align}
+In the real world, this is akin to asking the question, ``What item could I have recommended in the past $K$ steps that would have been better than all recommendations made in the past $K$ steps?'' In asking this, the creator aims to produce a new video that would appeal to all users more than the video that was recommended to them.
+\end{enumerate}
+
+\item \points{2b} Implement these three methods in the \texttt{update\_arms()} function in \texttt{submission.py}. This should be about 25 lines of code. Hints have been provided in the form of comments.

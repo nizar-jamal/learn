@@ -1,0 +1,40 @@
+\def\assignmentnum{5 }
+\def\assignmenttitle{XCS234 Assignment \assignmentnum}
+
+
+\input{macros}
+\input{py-macros}
+
+\usepackage{biblatex} % bibliography
+\addbibresource{main.bib}
+
+\begin{document}
+
+\pagestyle{myheadings} \markboth{}{\assignmenttitle}
+
+{\huge\noindent \assignmenttitle}
+
+\ruleskip
+
+{\bf Due {\due }.}
+
+\medskip
+
+\input{00-instructions/00-main}
+
+\ruleskip
+
+\clearpage
+
+\input{00-intro}
+\clearpage
+
+\input{01-estimation-warfarin-dose/00-main}
+\clearpage
+
+\input{02-multi-arm-bandit/00-main}
+\clearpage
+
+\input{00-outro}
+
+\end{document}

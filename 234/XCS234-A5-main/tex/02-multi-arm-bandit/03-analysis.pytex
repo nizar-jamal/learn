@@ -1,0 +1,88 @@
+\subsection*{Analysis}
+
+\item For all the experiments in this section, we will initialize the simulator with 25 users and 10 arms each represented by a feature vector of dimension 10. We will run the simulation for a total of 10000 steps and use $\alpha=1.0$ for the LinUCB algorithm. All these arguments have already been set for you and you will not have to change them.\\
+For the questions below, please answer with just \textbf{2-3 sentences}.
+
+\begin{enumerate}[(i)]
+    \item \points{2ci} Run the LinUCB algorithm without adding any new arms. Run the algorithm for 5 different seeds. Report the mean and standard deviation of the total fraction correct. You can do this by running the following command:
+    \begin{lstlisting}
+        python run.py -t simulator -s 0 1 2 3 4 -u none
+    \end{lstlisting}
+
+🐍
+import re
+with open('submission.tex') as f: print((re.search(r'% <SCPD_SUBMISSION_TAG>_2ci(.*?)% <SCPD_SUBMISSION_TAG>_2ci', f.read(), re.DOTALL)).group(1))
+🐍
+
+    \item \points{2cii} Run the LinUCB algorithm by adding new arms with the \textbf{popular} strategy. Run it with 4 different values of $K \in {500,1000,2500,5000}$. Run each $K$ for 5 different seeds. Report the mean and standard deviation of the total fraction correct for each $K$. You can do this by running the following command:
+    \begin{lstlisting}
+        python run.py -t simulator -s 0 1 2 3 4 -u popular -k 500 1000 2500 5000
+    \end{lstlisting}
+    Are your results better or worse than the results when you didn't add any new arms? Why do you think this is the case?
+
+🐍
+import re
+with open('submission.tex') as f: print((re.search(r'% <SCPD_SUBMISSION_TAG>_2cii(.*?)% <SCPD_SUBMISSION_TAG>_2cii', f.read(), re.DOTALL)).group(1))
+🐍
+
+    \item \points{2ciii} Run the LinUCB algorithm by adding new arms with the \textbf{corrective} strategy. Run it with 4 different values of $K \in {500,1000,2500,5000}$. Run each $K$ for 5 different seeds. Report the mean and standard deviation of the total fraction correct for each $K$. You can do this by running the following command:
+    \begin{lstlisting}
+        python run.py -t simulator -s 0 1 2 3 4 -u corrective -k 500 1000 2500 5000
+    \end{lstlisting}
+    Which arm update strategy is better -- corrective or popular? Or are they the same? Why do you think this is the case?
+
+🐍
+import re
+with open('submission.tex') as f: print((re.search(r'% <SCPD_SUBMISSION_TAG>_2ciii(.*?)% <SCPD_SUBMISSION_TAG>_2ciii', f.read(), re.DOTALL)).group(1))
+🐍
+
+    \item \points{2civ} Run the LinUCB algorithm by adding new arms with the \textbf{counterfactual} strategy. Run it with 4 different values of $K \in {500,1000,2500,5000}$. Run each $K$ for 5 different seeds. Report the mean and standard deviation of the total fraction correct for each $K$. You can do this by running the following command:
+    \begin{lstlisting}
+        python run.py -t simulator -s 0 1 2 3 4 -u counterfactual -k 500 1000 2500 5000
+    \end{lstlisting}
+    Plot a table to compare the results from all 3 arm update strategies and when you don't add new arms for different values of $K$. Which arm update strategy is the best of the three? Which of them perform better than the case where we don't add new arms? Why do you think this is the case?
+
+🐍
+import re
+with open('submission.tex') as f: print((re.search(r'% <SCPD_SUBMISSION_TAG>_2civ(.*?)% <SCPD_SUBMISSION_TAG>_2civ', f.read(), re.DOTALL)).group(1))
+🐍
+    
+    \item \points{2cv} Now run all the algorithms together for $K=500$ and plot a graph of the fraction incorrect over time. You can run this with the following command:
+    \begin{lstlisting}
+        python run.py -t simulator -s 0 1 2 3 4 -u none popular corrective counterfactual -k 500 --plot-u
+    \end{lstlisting}
+
+    Your plot should look like the following image below:
+
+    \begin{figure}[H]
+    \centering
+        \includegraphics[width=.3\linewidth]{images/fraction_incorrect_2}
+    \end{figure}
+
+    How do the different strategies perform for $K=500$?
+
+🐍
+import re
+with open('submission.tex') as f: print((re.search(r'% <SCPD_SUBMISSION_TAG>_2cv(.*?)% <SCPD_SUBMISSION_TAG>_2cv', f.read(), re.DOTALL)).group(1))
+🐍
+
+    \item \points{2cvi} Let us analyse the effect of $K$ on all our algorithms. Plot a graph of the total fraction correct for all the algorithms for $K \in \{100, 250, 500, 1000, 2000, 3000, 4000, 5000\}$. You can run this with the following command:
+    \begin{lstlisting}
+        python run.py -t simulator -s 0 1 2 3 4 -u none popular corrective counterfactual -k 100 250 500 1000 2000 3000 4000 5000 --plot-k
+    \end{lstlisting}
+
+    Your plot should look like the following image below:
+
+    \begin{figure}[H]
+    \centering
+        \includegraphics[width=.3\linewidth]{images/k_analysis}
+    \end{figure}
+
+    Which strategies get better as you increase $K$ and which strategies get worse? Why do you think this is the case?
+
+🐍
+import re
+with open('submission.tex') as f: print((re.search(r'% <SCPD_SUBMISSION_TAG>_2cvi(.*?)% <SCPD_SUBMISSION_TAG>_2cvi', f.read(), re.DOTALL)).group(1))
+🐍
+
+\end{enumerate}

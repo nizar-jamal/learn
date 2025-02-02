@@ -1,0 +1,38 @@
+\section{RL for personalized recommendations}
+
+One of the most influential applications of RL in the real-world is in generating personalized recommendations for videos, movies, games, music, etc. Companies such as Netflix (\cite{netflix_slides}), Spotify (\cite{spotify_recs}), Yahoo (\cite{li2010contextual}) and Microsoft (\cite{swaminathan2017offpolicy}) use contextual bandits to recommend content that is more likely to catch the user's attention. Generating recommendations is an important task for these companies --- the value of Netflix recommendations to the company itself is estimated at \$1 billion (\cite{netflix_recs}).
+
+\noindent
+Content recommendations take place in a dynamical system containing feedback loops (\cite{Beer1995}) affecting both users and producers. Reading recommended articles and watching recommended videos changes people's interests and preferences, and content providers change what they make as they learn what their audience values.  However, when the system recommends content to the user, the user's choices are strongly influenced by the set of options offered. This creates a feedback loop in which training data reflects \textit{both} user preferences and previous algorithmic recommendations. 
+
+\noindent
+In this problem, we will investigate how \textit{video creators} learn from people's interactions with a recommendation system for videos, how they change the videos they produce accordingly, and what these provider-side feedback loops mean for the users. Dynamics similar to the ones we investigate here have been studied in newsrooms as journalists respond to real-time information about article popularity (\cite{Christin2018}), and on YouTube as video creators use metrics such as clicks, minutes watched, likes and dislikes, comments, and more to determine what video topics and formats their audience prefers (\cite{Christin2021}). 
+
+\noindent
+We have created a (toy) simulation that allows you to model a video recommender system as a contextual bandit problem.\footnote{According to \cite{45530}, YouTube does not currently use RL for their recommendations, but other video recommendation systems do, as noted above.} In our simulation, assume we have a certain fixed number of users $N_u$. Each user has a set of preferences, and their preference sets are all different from one another. We start off with some number of videos we can recommend to these users. These videos correspond to the arms of the contextual bandit. Initially there are $N_a$ arms. Your goal is to develop a contextual bandit algorithm that can recommend the best videos to each user as quickly as possible. 
+ 
+
+\noindent
+In our Warfarin setting above, $N_a$ was fixed: we always chose from three different dosages for all patients. However, video hosting and recommendation sites like YouTube are more dynamic. Content creators monitor user behavior and add new videos (i.e. arms) to the platform in response to the popularity of their past videos. In other words, $N_a$ keeps increasing over time. 
+
+\noindent
+How does this change the problem to be solved? Are we still in the bandit setting or is this now morphing into an RL problem? For now, we will treat it as a bandit problem. Remember that the number of users is static: $N_u$ is a constant and doesn't change. In the coding portion of this assignment, you will study the effect of adding new arms into the contextual bandit setup, the different strategies we can employ to add these arms and measure how they affect performance. 
+
+\subsection*{Implementational details of the simulator}
+Most of the simulator has been written for you but the details might be useful in analysing your results. The only parts of the simulator you will need to write are the different strategies used to add more arms to the contextual bandit. 
+
+\noindent
+The simulator is initialized with $N_u$ users and $N_a$ arms where each user and arm is represented as a feature vector of dimension $d$. Each element of these vectors is initialized i.i.d from a normal distribution. When reset, the simulator returns a random user context vector from the set of $N_u$ users.  When the algorithm chooses an arm, the simulator returns a reward of 0 if the arm chosen was the best arm for that user and -1 otherwise.
+
+\noindent
+We will be running the simulator for $T$ steps where each step represents one user interaction. After every $K$ steps, we add an arm to the simulator using one of three different strategies outlined below.
+
+\noindent
+Go through the code for the simulator in \texttt{submission.py}. Most of the simulator is implemented for you: the only method you will need to implement is \texttt{update\_arms()}. 
+
+\begin{enumerate}[(a)]
+    \input{02-multi-arm-bandit/01-bandit-algorithm}
+    \input{02-multi-arm-bandit/02-arm-strategy}
+    \input{02-multi-arm-bandit/03-analysis}
+    \input{02-multi-arm-bandit/04-discussion}
+\end{enumerate}

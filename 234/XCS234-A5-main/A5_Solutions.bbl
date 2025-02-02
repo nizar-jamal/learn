@@ -1,0 +1,376 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.2 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{nty/global//global/global}
+    \entry{Beer1995}{article}{}
+      \name{author}{1}{}{%
+        {{hash=0dec8653c302107837212e06ab20dc92}{%
+           family={Beer},
+           familyi={B\bibinitperiod},
+           given={Randall\bibnamedelima D.},
+           giveni={R\bibinitperiod\bibinitdelim D\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Elsevier {BV}}%
+      }
+      \strng{namehash}{0dec8653c302107837212e06ab20dc92}
+      \strng{fullhash}{0dec8653c302107837212e06ab20dc92}
+      \strng{bibnamehash}{0dec8653c302107837212e06ab20dc92}
+      \strng{authorbibnamehash}{0dec8653c302107837212e06ab20dc92}
+      \strng{authornamehash}{0dec8653c302107837212e06ab20dc92}
+      \strng{authorfullhash}{0dec8653c302107837212e06ab20dc92}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Artificial Intelligence}
+      \field{month}{1}
+      \field{number}{1-2}
+      \field{title}{A dynamical systems perspective on agent-environment interaction}
+      \field{volume}{72}
+      \field{year}{1995}
+      \field{pages}{173\bibrangedash 215}
+      \range{pages}{43}
+      \verb{doi}
+      \verb 10.1016/0004-3702(94)00005-l
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1016/0004-3702(94)00005-l
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1016/0004-3702(94)00005-l
+      \endverb
+    \endentry
+    \entry{Christin2018}{article}{}
+      \name{author}{1}{}{%
+        {{hash=3d19e9ffd6416a6932455e22d2f6d3d5}{%
+           family={Christin},
+           familyi={C\bibinitperiod},
+           given={Angèle},
+           giveni={A\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {University of Chicago Press}%
+      }
+      \strng{namehash}{3d19e9ffd6416a6932455e22d2f6d3d5}
+      \strng{fullhash}{3d19e9ffd6416a6932455e22d2f6d3d5}
+      \strng{bibnamehash}{3d19e9ffd6416a6932455e22d2f6d3d5}
+      \strng{authorbibnamehash}{3d19e9ffd6416a6932455e22d2f6d3d5}
+      \strng{authornamehash}{3d19e9ffd6416a6932455e22d2f6d3d5}
+      \strng{authorfullhash}{3d19e9ffd6416a6932455e22d2f6d3d5}
+      \field{sortinit}{C}
+      \field{sortinithash}{4d103a86280481745c9c897c925753c0}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{American Journal of Sociology}
+      \field{month}{3}
+      \field{number}{5}
+      \field{title}{Counting Clicks: Quantification and Variation in Web Journalism in the United States and France}
+      \field{volume}{123}
+      \field{year}{2018}
+      \field{pages}{1382\bibrangedash 1415}
+      \range{pages}{34}
+      \verb{doi}
+      \verb 10.1086/696137
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1086/696137
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1086/696137
+      \endverb
+    \endentry
+    \entry{Christin2021}{article}{}
+      \name{author}{2}{}{%
+        {{hash=3d19e9ffd6416a6932455e22d2f6d3d5}{%
+           family={Christin},
+           familyi={C\bibinitperiod},
+           given={Angèle},
+           giveni={A\bibinitperiod}}}%
+        {{hash=0d71d945d48d7ad7eb29b9c804190c39}{%
+           family={Lewis},
+           familyi={L\bibinitperiod},
+           given={Rebecca},
+           giveni={R\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {{SAGE} Publications}%
+      }
+      \strng{namehash}{73e99e63614e5014282dd198e4822572}
+      \strng{fullhash}{73e99e63614e5014282dd198e4822572}
+      \strng{bibnamehash}{73e99e63614e5014282dd198e4822572}
+      \strng{authorbibnamehash}{73e99e63614e5014282dd198e4822572}
+      \strng{authornamehash}{73e99e63614e5014282dd198e4822572}
+      \strng{authorfullhash}{73e99e63614e5014282dd198e4822572}
+      \field{sortinit}{C}
+      \field{sortinithash}{4d103a86280481745c9c897c925753c0}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Social Media $\mathplus$ Society}
+      \field{month}{1}
+      \field{number}{1}
+      \field{title}{The Drama of Metrics: Status, Spectacle, and Resistance Among {YouTube} Drama Creators}
+      \field{volume}{7}
+      \field{year}{2021}
+      \field{pages}{205630512199966}
+      \range{pages}{1}
+      \verb{doi}
+      \verb 10.1177/2056305121999660
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1177/2056305121999660
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1177/2056305121999660
+      \endverb
+    \endentry
+    \entry{45530}{inproceedings}{}
+      \name{author}{3}{}{%
+        {{hash=0169f2fa7857fb3f84d58bffdd4ab3f6}{%
+           family={Covington},
+           familyi={C\bibinitperiod},
+           given={Paul},
+           giveni={P\bibinitperiod}}}%
+        {{hash=46b2323af4a505d3970aa48d3d4707a4}{%
+           family={Adams},
+           familyi={A\bibinitperiod},
+           given={Jay},
+           giveni={J\bibinitperiod}}}%
+        {{hash=135c293c9df32bc8ce6b0e3cc2d4e2e4}{%
+           family={Sargin},
+           familyi={S\bibinitperiod},
+           given={Emre},
+           giveni={E\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {New York, NY, USA}%
+      }
+      \strng{namehash}{5f9b7be4001a6da1a2a2c48cb1a325a0}
+      \strng{fullhash}{5f9b7be4001a6da1a2a2c48cb1a325a0}
+      \strng{bibnamehash}{5f9b7be4001a6da1a2a2c48cb1a325a0}
+      \strng{authorbibnamehash}{5f9b7be4001a6da1a2a2c48cb1a325a0}
+      \strng{authornamehash}{5f9b7be4001a6da1a2a2c48cb1a325a0}
+      \strng{authorfullhash}{5f9b7be4001a6da1a2a2c48cb1a325a0}
+      \field{sortinit}{C}
+      \field{sortinithash}{4d103a86280481745c9c897c925753c0}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the 10th ACM Conference on Recommender Systems}
+      \field{title}{Deep Neural Networks for YouTube Recommendations}
+      \field{year}{2016}
+    \endentry
+    \entry{netflix_recs}{article}{}
+      \name{author}{2}{}{%
+        {{hash=b97040dd3d54c2b1765792e6a12970e5}{%
+           family={Gomez{-}Uribe},
+           familyi={G\bibinitperiod},
+           given={Carlos\bibnamedelima Alberto},
+           giveni={C\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+        {{hash=15380ab50a79b223e10c63d522cf567d}{%
+           family={Hunt},
+           familyi={H\bibinitperiod},
+           given={Neil},
+           giveni={N\bibinitperiod}}}%
+      }
+      \strng{namehash}{18d9546be13ed4f505357c1722c99588}
+      \strng{fullhash}{18d9546be13ed4f505357c1722c99588}
+      \strng{bibnamehash}{18d9546be13ed4f505357c1722c99588}
+      \strng{authorbibnamehash}{18d9546be13ed4f505357c1722c99588}
+      \strng{authornamehash}{18d9546be13ed4f505357c1722c99588}
+      \strng{authorfullhash}{18d9546be13ed4f505357c1722c99588}
+      \field{sortinit}{G}
+      \field{sortinithash}{32d67eca0634bf53703493fb1090a2e8}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{{ACM} Trans. Manag. Inf. Syst.}
+      \field{number}{4}
+      \field{title}{The Netflix Recommender System: Algorithms, Business Value, and Innovation}
+      \field{volume}{6}
+      \field{year}{2016}
+      \field{pages}{13:1\bibrangedash 13:19}
+      \range{pages}{-1}
+      \verb{doi}
+      \verb 10.1145/2843948
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1145/2843948
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1145/2843948
+      \endverb
+    \endentry
+    \entry{netflix_slides}{article}{}
+      \name{author}{2}{}{%
+        {{hash=b560af2853dd670e7a04baf1e99b161f}{%
+           family={Kawale},
+           familyi={K\bibinitperiod},
+           given={Jaya},
+           giveni={J\bibinitperiod}}}%
+        {{hash=7afa8e62cd9b677dd3ac1a49e6745584}{%
+           family={Chow},
+           familyi={C\bibinitperiod},
+           given={Elliot},
+           giveni={E\bibinitperiod}}}%
+      }
+      \strng{namehash}{a7731b2e3e7c06d246f6f158a539f3ad}
+      \strng{fullhash}{a7731b2e3e7c06d246f6f158a539f3ad}
+      \strng{bibnamehash}{a7731b2e3e7c06d246f6f158a539f3ad}
+      \strng{authorbibnamehash}{a7731b2e3e7c06d246f6f158a539f3ad}
+      \strng{authornamehash}{a7731b2e3e7c06d246f6f158a539f3ad}
+      \strng{authorfullhash}{a7731b2e3e7c06d246f6f158a539f3ad}
+      \field{sortinit}{K}
+      \field{sortinithash}{c02bf6bff1c488450c352b40f5d853ab}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{A Multi-Armed Bandit Framework for Recommendations at Netflix}
+      \field{year}{2018}
+      \verb{urlraw}
+      \verb https://info.dataengconf.com/hubfs/SF\%2018\%20-\%20Slides/DS/A\%20Multi-Armed\%20Bandit\%20Framework\%20for\%20Recommendations\%20at\%20Netflix.pdf
+      \endverb
+      \verb{url}
+      \verb https://info.dataengconf.com/hubfs/SF%5C%2018%5C%20-%5C%20Slides/DS/A%5C%20Multi-Armed%5C%20Bandit%5C%20Framework%5C%20for%5C%20Recommendations%5C%20at%5C%20Netflix.pdf
+      \endverb
+    \endentry
+    \entry{li2010contextual}{inproceedings}{}
+      \name{author}{4}{}{%
+        {{hash=09b19a7bef3ca63e5cf4af03d2b00ea0}{%
+           family={Li},
+           familyi={L\bibinitperiod},
+           given={Lihong},
+           giveni={L\bibinitperiod}}}%
+        {{hash=b4cf40175634d9dbb3df41ac5c026e93}{%
+           family={Chu},
+           familyi={C\bibinitperiod},
+           given={Wei},
+           giveni={W\bibinitperiod}}}%
+        {{hash=3b32f20ce03981cb315259a6fd0a3068}{%
+           family={Langford},
+           familyi={L\bibinitperiod},
+           given={John},
+           giveni={J\bibinitperiod}}}%
+        {{hash=08900c47ecc2f4dbcb934ad47bb6db9b}{%
+           family={Schapire},
+           familyi={S\bibinitperiod},
+           given={Robert\bibnamedelima E},
+           giveni={R\bibinitperiod\bibinitdelim E\bibinitperiod}}}%
+      }
+      \strng{namehash}{dfdc0f28a3ae1801fbe41ec9dda0695a}
+      \strng{fullhash}{7cf99cb7f099fd712e18025bb02ba636}
+      \strng{bibnamehash}{dfdc0f28a3ae1801fbe41ec9dda0695a}
+      \strng{authorbibnamehash}{dfdc0f28a3ae1801fbe41ec9dda0695a}
+      \strng{authornamehash}{dfdc0f28a3ae1801fbe41ec9dda0695a}
+      \strng{authorfullhash}{7cf99cb7f099fd712e18025bb02ba636}
+      \field{sortinit}{L}
+      \field{sortinithash}{7c47d417cecb1f4bd38d1825c427a61a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the 19th international conference on World wide web}
+      \field{title}{A contextual-bandit approach to personalized news article recommendation}
+      \field{year}{2010}
+      \field{pages}{661\bibrangedash 670}
+      \range{pages}{10}
+    \endentry
+    \entry{spotify_recs}{article}{}
+      \name{author}{1}{}{%
+        {{hash=9fe241b8fe8b578daac4b29feb9e79d7}{%
+           family={Mehrotra},
+           familyi={M\bibinitperiod},
+           given={Rishabh},
+           giveni={R\bibinitperiod}}}%
+      }
+      \strng{namehash}{9fe241b8fe8b578daac4b29feb9e79d7}
+      \strng{fullhash}{9fe241b8fe8b578daac4b29feb9e79d7}
+      \strng{bibnamehash}{9fe241b8fe8b578daac4b29feb9e79d7}
+      \strng{authorbibnamehash}{9fe241b8fe8b578daac4b29feb9e79d7}
+      \strng{authornamehash}{9fe241b8fe8b578daac4b29feb9e79d7}
+      \strng{authorfullhash}{9fe241b8fe8b578daac4b29feb9e79d7}
+      \field{sortinit}{M}
+      \field{sortinithash}{4625c616857f13d17ce56f7d4f97d451}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Recommendations in a Marketplace: Personalizing Explainable Recommendations with Multi-objective Contextual Bandits}
+      \field{year}{2018}
+      \verb{urlraw}
+      \verb https://mlconf.com/sessions/recommendations-in-a-marketplace-personalizing-explainable-recommendations-with-multi-objective-contextual-bandits/
+      \endverb
+      \verb{url}
+      \verb https://mlconf.com/sessions/recommendations-in-a-marketplace-personalizing-explainable-recommendations-with-multi-objective-contextual-bandits/
+      \endverb
+    \endentry
+    \entry{swaminathan2017offpolicy}{misc}{}
+      \name{author}{7}{}{%
+        {{hash=af7d0e4d0095cc3456e940883204919b}{%
+           family={Swaminathan},
+           familyi={S\bibinitperiod},
+           given={Adith},
+           giveni={A\bibinitperiod}}}%
+        {{hash=a74f4a2865ebc48f45a2864eb8ae6abf}{%
+           family={Krishnamurthy},
+           familyi={K\bibinitperiod},
+           given={Akshay},
+           giveni={A\bibinitperiod}}}%
+        {{hash=fbc92e6ef1054bf5beee95529f5aaedc}{%
+           family={Agarwal},
+           familyi={A\bibinitperiod},
+           given={Alekh},
+           giveni={A\bibinitperiod}}}%
+        {{hash=f22170ade97bd945149242679a0c806c}{%
+           family={Dudík},
+           familyi={D\bibinitperiod},
+           given={Miroslav},
+           giveni={M\bibinitperiod}}}%
+        {{hash=3b32f20ce03981cb315259a6fd0a3068}{%
+           family={Langford},
+           familyi={L\bibinitperiod},
+           given={John},
+           giveni={J\bibinitperiod}}}%
+        {{hash=098930609b6e54801b72ede52bdd2564}{%
+           family={Jose},
+           familyi={J\bibinitperiod},
+           given={Damien},
+           giveni={D\bibinitperiod}}}%
+        {{hash=fa4139c6d713bf6a86151ef11ff606b2}{%
+           family={Zitouni},
+           familyi={Z\bibinitperiod},
+           given={Imed},
+           giveni={I\bibinitperiod}}}%
+      }
+      \strng{namehash}{1f02eefcb14f45845b17316d81b7d192}
+      \strng{fullhash}{b895b351396d349496b34c55d9f27ada}
+      \strng{bibnamehash}{1f02eefcb14f45845b17316d81b7d192}
+      \strng{authorbibnamehash}{1f02eefcb14f45845b17316d81b7d192}
+      \strng{authornamehash}{1f02eefcb14f45845b17316d81b7d192}
+      \strng{authorfullhash}{b895b351396d349496b34c55d9f27ada}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{eprintclass}{cs.LG}
+      \field{eprinttype}{arXiv}
+      \field{title}{Off-policy evaluation for slate recommendation}
+      \field{year}{2017}
+      \verb{eprint}
+      \verb 1605.04812
+      \endverb
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+

@@ -1,0 +1,30 @@
+\subsection*{Discussion}
+
+We now would like you to think about the different interactions between content creators, users, and AI algorithms. 
+
+\begin{enumerate}[(1)]
+    \item \textbf{User preferences are static}: if at time $t_1$ a user only likes to watch videos about dogs, at time $t_{100}$ he/she/they will still only want to watch videos about dogs. 
+    As creators learn more about user preferences, they cooperate in making more of the content that the users prefer and are rewarded in the metrics for doing so.  AI algorithms also provide recommendations of content most likely to align with the static user preferences.
+
+    \item In a second situation, user \textbf{meta-preferences (e.g. for popular content) are static but the AI algorithm can contribute to feedback loops}. For example, assume some users always prefer popular content, but their specific content preferences will shift over time depending on what appears to be most popular in the content they are exposed to.  Initially, automated algorithm randomly selects some content to show more frequently. Seeing that it has been viewed more frequently, content creators create more of that content.  The automated algorithm then serves it to more people, causing its popularity to increase. Creators specializing in initially popular content are rewarded, causing a ``rich get richer’’ phenomenon, both at the level of individual content items, and for particular creators. 
+
+    \item Consider an example: users who did not previously like cereal are influenced by an advertisement or by repeated exposure to low-view-count cereal videos. They come to prefer cereal and will now click on cereal videos in the future, but may be unaware that the algorithm influenced this shift in preferences. In this third scenario, 
+    \textbf{users' preferences are dynamic} and are influenced and changed by the content served. This can both influence what later content is recommended by the AI algorithm and which future new content is created by content creators. 
+
+    \item A more complicated scenario can be when users may change in response to perceived or actual algorithmic classification.  For example, a user may click on many items relating to Taylor Swift. This may result in an AI algorithm serving them many future items related to Taylor swift or implicitly categorizing them as "a Taylor Swift fan." Although the user had not previously realized their own preference for Taylor Swift, once the user sees how much Taylor Swift content they are now being served, the user realizes that the AI algorithm models them as someone who really likes Taylor Swift. The user may react to this perceived labeling of being a “Taylor Swift fan”, potentially changing their own behavior either to embrace this classification (and click more on Taylor Swift content) or rejecting this categorization (and click less on future Taylor Swift content). Here users' preferences are dynamic and \textbf{users react to their algorithmic} funneling into different soft categories, creating “looping kinds”. 
+\end{enumerate}
+
+\item \points{2d} Consider the four situations (of many others) above. Which of these do you think may have problematic ethical implications? What information would be needed to understand which situation is happening in a particular platform-users-content creator universe? Do you think it is likely that platform creators or content creators have access to this information in their standard logs, or do you expect specific experiments would be needed?  (2-4 sentences)
+
+🐍
+import re
+with open('submission.tex') as f: print((re.search(r'% <SCPD_SUBMISSION_TAG>_2d(.*?)% <SCPD_SUBMISSION_TAG>_2d', f.read(), re.DOTALL)).group(1))
+🐍
+
+\item \points{2e} Who is responsible for identifying a negative feedback loop and intervening to break it: content creators or platforms?  Justify your answer with a 3-6 sentence explanation that references one or more of the above scenarios.
+
+🐍
+import re
+with open('submission.tex') as f: print((re.search(r'% <SCPD_SUBMISSION_TAG>_2e(.*?)% <SCPD_SUBMISSION_TAG>_2e', f.read(), re.DOTALL)).group(1))
+🐍
+
