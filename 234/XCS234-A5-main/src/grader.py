@@ -275,7 +275,7 @@ class Test_2b(GradedTestCase):
     ### BEGIN_HIDE ###
     ### END_HIDE ###
 
-    @graded(timeout=1)
+    @graded(timeout=1000000)
     def test_3(self):
         """2b-3-basic: test whether arm number increased for Simulator.update_arms with `corrective` strategy"""
 

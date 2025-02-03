@@ -155,8 +155,8 @@ class LinUCB(BanditPolicy):
         self.features = features
         self.d = len(features)
         self.alpha = alpha
-        self.A = {a: np.eye(self.d) for a in range(num_arms)}
-        self.b = {a: np.zeros(self.d) for a in range(num_arms)}
+        self.A = [np.eye(self.d) for _ in range(num_arms)]
+        self.b = [np.zeros(self.d) for _ in range(num_arms)]
 
         ### END CODE HERE ###
 
@@ -194,9 +194,9 @@ class LinUCB(BanditPolicy):
 
         #########   ~5 lines.   #############
         ### START CODE HERE ###
-        theta = {a: np.linalg.inv(self.A[a]).dot(self.b[a]) for a in range(len(self.A))}
-        p = {a: theta[a].dot(xvec) + self.alpha * np.sqrt(xvec.dot(np.linalg.inv(self.A[a])).dot(xvec)) for a in range(len(self.A))}
-        return max(p, key=p.get)
+        theta = [np.linalg.inv(self.A[a]).dot(self.b[a]) for a in range(len(self.A))]
+        p = [theta[a].dot(xvec) + self.alpha * np.sqrt(xvec.dot(np.linalg.inv(self.A[a])).dot(xvec)) for a in range(len(self.A))]
+        return np.argmax(p)
         ### END CODE HERE ###
         #######################################################
 
@@ -253,9 +253,10 @@ class eGreedyLinB(LinUCB):
         xvec = self.extract_features(x)
 
         ### START CODE HERE ###
-        p = {a: self.b[a].dot(xvec) for a in range(len(self.A))}
+        theta = [np.linalg.inv(self.A[a]).dot(self.b[a]) for a in range(len(self.A))]
+        p = [theta[a].dot(xvec) for a in range(len(self.A))]
         if np.random.uniform() > epsilon:
-            return max(p, key=p.get)
+            return np.argmax(p)
         return np.random.choice(range(len(self.A)))
         ### END CODE HERE ###
 
@@ -302,9 +303,9 @@ class ThomSampB(BanditPolicy):
         self.num_arms = num_arms
         self.d = len(features)
         self.v2 = alpha
-        self.B = {a: np.eye(self.d) for a in range(num_arms)}
-        self.mu = {a: np.zeros(self.d) for a in range(num_arms)}
-        self.f = {a: np.zeros(self.d) for a in range(num_arms)}
+        self.B = [np.eye(self.d) for _ in range(num_arms)]
+        self.mu = [np.zeros(self.d) for _ in range(num_arms)]
+        self.f = [np.zeros(self.d) for a in range(num_arms)]
         ### END CODE HERE ###
 
     def extract_features(self, x):
@@ -336,9 +337,9 @@ class ThomSampB(BanditPolicy):
         xvec = self.extract_features(x)
 
         ### START CODE HERE ###
-        self.mu = {a: np.random.multivariate_normal(self.mu[a], np.linalg.inv(self.v2 * self.B[a])) for a in range(self.num_arms)}
-        a = {a: self.mu[a].dot(xvec) for a in range(self.num_arms)}
-        return max(a, key=a.get)
+        mu_tilde = [np.random.multivariate_normal(self.mu[a], self.v2 * np.linalg.inv(self.B[a])) for a in range(self.num_arms)]
+        sampled_means = [mu_tilde[a].dot(xvec) for a in range(self.num_arms)]
+        return np.argmax(sampled_means)
         ### END CODE HERE ###
 
     def update(self, x, a, r):
@@ -386,6 +387,8 @@ class DynamicLinUCB(LinUCB):
         #######################################################
         #########  ~2 lines.   #############
         ### START CODE HERE ###
+        self.A.append(np.eye(self.d))
+        self.b.append(np.zeros(self.d))
         ### END CODE HERE ###
 
 
@@ -499,6 +502,14 @@ class Simulator:
             #######################################################
             #########  ~8 lines.   #############
             ### START CODE HERE ###
+            logs = np.array(self.logs)
+            u_arms, c_arms = np.unique(logs[:,1], return_counts=True)
+            if len(u_arms) == 1:
+                return False
+            top_arms = u_arms[np.argsort(c_arms)[-2:]]  # Top 2
+            new_theta = (self.arms[top_arms[0]] + self.arms[top_arms[1]]) / 2
+            self.arms[self.num_arms] = new_theta
+            self.num_arms += 1      
             ### END CODE HERE ###
             #######################################################
         if self.update_arms_strategy == "corrective":
@@ -515,6 +526,13 @@ class Simulator:
             #######################################################
             #########  ~7 lines.   #############
             ### START CODE HERE ###
+            logs = np.array(self.logs)
+            incorrect_pred = logs[logs[:,1] != logs[:,2]]
+            if len(incorrect_pred) == 0:
+                return False
+            new_theta = np.mean([self.arms[a] for a in incorrect_pred[:,2]], axis = 0)
+            self.arms[self.num_arms] = new_theta
+            self.num_arms += 1
             ### END CODE HERE ###
             #######################################################
         if self.update_arms_strategy == "counterfactual":
@@ -532,9 +550,18 @@ class Simulator:
             #######################################################
             #########  ~9 lines.   #############
             ### START CODE HERE ###
+            logs = np.array(self.logs)
+            new_theta = np.zeros(self.num_features)
+            eta = 0.1
+            for log in logs:
+                user_id, chosen_arm_id, best_arm_id = log
+                x = self.users[user_id]
+                new_theta += x.dot((x.dot(self.arms[best_arm_id]) - x.dot(self.arms[chosen_arm_id])))
+            new_theta = eta * new_theta
+            self.arms[self.num_arms] = new_theta
+            self.num_arms += 1    
             ### END CODE HERE ###
             #######################################################
-
         return True
 
     def step(self, user_id, arm_id):
