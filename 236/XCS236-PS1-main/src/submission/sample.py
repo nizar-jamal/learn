@@ -16,6 +16,7 @@ def temperature_scale(logits, model, new_past, config, temperature, temperature_
         ##TODO:
         ## Return logits scaled by the temperature parameter
         ### START CODE HERE ###
+        return(logits / temperature)
         ### END CODE HERE ###
         raise NotImplementedError
     # EXTRA CREDIT ONLY   
@@ -31,6 +32,7 @@ def temperature_scale(logits, model, new_past, config, temperature, temperature_
         # compute probability of first token
         first_probs = None
         ### START CODE HERE ###
+        first_probs = F.softmax(logits / temperature, dim=-1)
         ### END CODE HERE ###
 
         for t in range(config.vocab_size):
@@ -45,6 +47,9 @@ def temperature_scale(logits, model, new_past, config, temperature, temperature_
             # Don't forget to also do top-k filtering when computing probabilities for the second token
             joint_prob_t = None
             ### START CODE HERE ###
+            next_logits, _ = model(new_current_text, past=new_past)
+            next_logits = top_k_logits(next_logits[:,-1,:], k=config.top_k)
+            joint_prob_t = F.softmax(next_logits / temperature, dim=-1) * first_prob
             ### END CODE HERE ###
             joint_probs.append( joint_prob_t )
 
@@ -55,6 +60,7 @@ def temperature_scale(logits, model, new_past, config, temperature, temperature_
         # TODO: scale joint_logits by temperature, and compute first_logits by marginalizing out the second token dimension
         first_logits = None
         ### START CODE HERE ###
+        first_logits = torch.logsumexp(joint_logits / temperature, dim=1)
         ### END CODE HERE ###
 
         return_logits[0,first_tokens] = first_logits
@@ -89,6 +95,8 @@ def sample(model, start_text, config, length, temperature=None, temperature_hori
             ##
             ## Note: It is expected that the code will throw an error until you've filled out the code block below.
             ### START CODE HERE ###
+            current_text = F.softmax(logits, dim=-1).multinomial(1)
+            output.append(current_text)
             ### END CODE HERE ###
 
             past = new_past

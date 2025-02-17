@@ -25,5 +25,19 @@ def log_likelihood(model, text):
         ## Hint: Implementation should only takes 3~7 lines of code.
         
         ### START CODE HERE ###
+        logits, _ = model(text)
+        # Shift logits and labels to ignore the first token
+        shift_logits = logits[:, :-1, :].contiguous()  # Shape: (1, T-1, vocab_size)
+        shift_labels = text[:, 1:].contiguous()  # Shape: (1, T-1)
+
+        # Compute cross-entropy loss with reduction='sum' to get negative log-likelihood
+        loss_fn = torch.nn.CrossEntropyLoss(reduction='sum')
+        nll_loss = loss_fn(shift_logits.view(-1, shift_logits.size(-1)), shift_labels.view(-1))
+
+        # Convert negative log-likelihood to positive log-likelihood
+        return -nll_loss.item()    
+        # criterion = nn.CrossEntropyLoss(reduction='sum')
+        # log_likelihood = -criterion(logits[:, :-1, :].reshape(-1, logits.shape[-1]), text[:, 1:].reshape(-1))
+        # return log_likelihood.item()
         ### END CODE HERE ###
         raise NotImplementedError
