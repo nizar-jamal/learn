@@ -32,7 +32,7 @@ def temperature_scale(logits, model, new_past, config, temperature, temperature_
         # compute probability of first token
         first_probs = None
         ### START CODE HERE ###
-        first_probs = F.softmax(logits / temperature, dim=-1)
+        first_probs = torch.softmax(logits, dim=-1)
         ### END CODE HERE ###
 
         for t in range(config.vocab_size):
@@ -48,8 +48,9 @@ def temperature_scale(logits, model, new_past, config, temperature, temperature_
             joint_prob_t = None
             ### START CODE HERE ###
             next_logits, _ = model(new_current_text, past=new_past)
-            next_logits = top_k_logits(next_logits[:,-1,:], k=config.top_k)
-            joint_prob_t = F.softmax(next_logits / temperature, dim=-1) * first_prob
+            s_logits = next_logits[:, -1, :]
+            next_logits = top_k_logits(s_logits, k=config.top_k)
+            joint_prob_t = torch.softmax(next_logits, dim=-1) * first_prob
             ### END CODE HERE ###
             joint_probs.append( joint_prob_t )
 
@@ -60,7 +61,7 @@ def temperature_scale(logits, model, new_past, config, temperature, temperature_
         # TODO: scale joint_logits by temperature, and compute first_logits by marginalizing out the second token dimension
         first_logits = None
         ### START CODE HERE ###
-        first_logits = torch.logsumexp(joint_logits / temperature, dim=1)
+        first_logits = torch.logsumexp(joint_logits / temperature, dim=-1)
         ### END CODE HERE ###
 
         return_logits[0,first_tokens] = first_logits
