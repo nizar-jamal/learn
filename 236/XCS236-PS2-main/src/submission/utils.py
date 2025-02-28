@@ -54,6 +54,9 @@ def sample_gaussian(m, v):
     # consider an alternative using torch.randn_like: https://pytorch.org/docs/stable/generated/torch.randn_like.html
     ################################################################################
     ### START CODE HERE ###
+    epsilon = torch.randn_like(m)
+    z = m + torch.sqrt(v) * epsilon
+    return(z)
     ### END CODE HERE ###
     ################################################################################
     # End of code modification
@@ -87,7 +90,10 @@ def log_normal(x, m, v):
     # the last dimension
     ################################################################################
     ### START CODE HERE ###
-    ### END CODE HERE ###
+    log_prob = -0.5 * (torch.log(2 * np.pi * v) + (x - m).pow(2) / v)
+    log_prob = log_prob.sum(-1)
+    return log_prob
+    ### END CODE HERE ###   
     ################################################################################
     # End of code modification
     ################################################################################
@@ -112,6 +118,10 @@ def log_normal_mixture(z, m, v):
     # in the batch
     ################################################################################
     ### START CODE HERE ###
+    log_prob = log_normal(z.unsqueeze(1), m, v)
+    # log_prob = torch.logsumexp(log_prob, dim=1) - np.log(m.size(1))
+    log_prob = log_mean_exp(log_prob, dim=1)
+    return log_prob
     ### END CODE HERE ###
     ################################################################################
     # End of code modification

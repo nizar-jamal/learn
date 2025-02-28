@@ -48,6 +48,14 @@ class VAE(nn.Module):
         #   nelbo, kl, rec
         ################################################################################
         ### START CODE HERE ###
+        z_m, z_v = self.enc(x)
+        z = ut.sample_gaussian(z_m, z_v)
+        x_logits = self.dec(z)
+        kl = ut.kl_normal(z_m, z_v, self.z_prior_m, self.z_prior_v)
+        rec = ut.log_bernoulli_with_logits(x, x_logits)
+        nelbo = kl - rec
+        # nelbo = kl + rec # since log)_bernoulli_with_logits is negative
+        return(nelbo.mean(), kl.mean(), -rec.mean())
         ### END CODE HERE ###
         ################################################################################
         # End of code modification
