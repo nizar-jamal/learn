@@ -59,6 +59,30 @@ class GMVAE(nn.Module):
         # this object by checking its shape.
         prior = ut.gaussian_parameters(self.z_pre, dim=1)
         ### START CODE HERE ###
+    
+        # Encode input to latent space
+        m_mixture, v_mixture = prior
+        q_m, q_v = self.enc(x)  # Shape: (batch, z_dim)
+
+        # Compute KL divergence between q(z|x) and p(z)
+        kl_per_component = ut.kl_normal(q_m.unsqueeze(1), q_v.unsqueeze(1), m_mixture, v_mixture)
+        
+        # Marginalize over mixture components using uniform weights
+        log_p = torch.log(self.pi).unsqueeze(0)  # Shape: (1, k)
+        log_q = torch.log_softmax(-kl_per_component, dim=1)  # Shape: (batch, k)
+        kl = ut.kl_cat(torch.exp(log_q), log_q, log_p).mean()
+
+        # Decode latent samples to reconstruct inputs
+        z_samples = ut.sample_gaussian(q_m, q_v)  # Sample from q(z|x)
+        logits = self.dec(z_samples)  # Shape: (batch, dim)
+
+        # Compute reconstruction loss using log_bernoulli_with_logits
+        rec = -ut.log_bernoulli_with_logits(x, logits).mean()  # Scalar
+
+        # Negative ELBO is the sum of KL divergence and reconstruction loss
+        nelbo = kl + rec
+
+        return nelbo, kl, rec    
         ### END CODE HERE ###
         ################################################################################
         # End of code modification

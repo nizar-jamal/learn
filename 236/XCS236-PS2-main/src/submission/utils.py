@@ -54,8 +54,14 @@ def sample_gaussian(m, v):
     # consider an alternative using torch.randn_like: https://pytorch.org/docs/stable/generated/torch.randn_like.html
     ################################################################################
     ### START CODE HERE ###
+    # Ensure variance is positive to avoid numerical issues
+    std = torch.sqrt(torch.clamp(v, min=1e-6))  # Clamp variance to avoid sqrt(0)
+    
+    # Sample epsilon from a standard normal distribution
     epsilon = torch.randn_like(m)
-    z = m + torch.sqrt(v) * epsilon
+    
+    # Reparameterization trick: z = μ + σ * ε
+    z = m + std * epsilon
     return(z)
     ### END CODE HERE ###
     ################################################################################
