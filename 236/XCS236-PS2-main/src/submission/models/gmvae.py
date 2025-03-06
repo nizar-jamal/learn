@@ -118,6 +118,43 @@ class GMVAE(nn.Module):
         # this object by checking its shape.
         prior = ut.gaussian_parameters(self.z_pre, dim=1)
         ### START CODE HERE ###
+        m_mixture, v_mixture = prior  # Shapes: (1, k, z_dim)
+
+        # Encode x to get q(z|x) parameters
+        m_q, v_q = self.enc(x)  # Encoder outputs mean and variance of q(z|x)
+
+        # Sample multiple z values from q(z|x) using reparameterization trick
+        z_samples = ut.sample_gaussian(m_q.unsqueeze(1).expand(-1, iw, -1), 
+                                    v_q.unsqueeze(1).expand(-1, iw, -1))  # Shape: (batch, iw, z_dim)
+
+        # Compute log probabilities for each sample
+        log_p_z = ut.log_normal_mixture(z_samples, m_mixture.squeeze(0), v_mixture.squeeze(0))  # (batch, iw)
+        log_q_z_x = ut.log_normal(z_samples, m_q.unsqueeze(1), v_q.unsqueeze(1))  # (batch, iw)
+
+        # Decode z to reconstruct x for each sample
+        logits = self.dec(z_samples)  # Shape: (batch, iw, dim)
+        
+        # Compute log p(x|z)
+        log_p_x_given_z = ut.log_bernoulli_with_logits(x.unsqueeze(1).expand(-1, iw, -1), logits)  # (batch, iw)
+
+        # Compute importance weights
+        log_weights = log_p_x_given_z + log_p_z - log_q_z_x  # Shape: (batch, iw)
+        
+        # Stabilize with max-log-sum-exp trick
+        max_log_weights = torch.max(log_weights, dim=1, keepdim=True)[0]  # Shape: (batch, 1)
+        weights_normalized = torch.exp(log_weights - max_log_weights)  # Shape: (batch, iw)
+
+        # Compute negative IWAE bound
+        niwae = -torch.mean(max_log_weights.squeeze() + 
+                            torch.log(torch.mean(weights_normalized, dim=1)))  # Negative IWAE
+
+        # ELBO decomposition terms (KL and reconstruction)
+        kl = torch.mean(log_q_z_x - log_p_z)  # KL divergence term (averaged over samples)
+        
+        rec_logits = self.dec(ut.sample_gaussian(m_q, v_q))  # Single sample for reconstruction term
+        rec = -torch.mean(ut.log_bernoulli_with_logits(x, rec_logits))  # Reconstruction term
+
+        return niwae, kl, rec
         ### END CODE HERE ###
         ################################################################################
         # End of code modification
