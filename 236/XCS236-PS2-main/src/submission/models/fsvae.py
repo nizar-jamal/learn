@@ -56,9 +56,8 @@ class FSVAE(nn.Module):
         ### START CODE HERE ###
         # Encode the input to get q(z|x,y)
         # The encoder returns parameters of q(z|x,y)
-        z_params = self.enc(x, y)
-        z_m, z_v = ut.gaussian_parameters(z_params, dim=1)  # Mean and variance of q(z|x,y)
-        
+        z_m, z_v  = self.enc(x, y)
+                
         # Sample z ~ q(z|x,y) using the reparameterization trick
         z = ut.sample_gaussian(z_m, z_v)
         
