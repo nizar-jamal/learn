@@ -133,23 +133,24 @@ class GMVAE(nn.Module):
         m_mixture = m_mixture.squeeze(0).unsqueeze(0).unsqueeze(0)  # Shape: (1, 1, k, z_dim)
         v_mixture = v_mixture.squeeze(0).unsqueeze(0).unsqueeze(0)  # Shape: (1, 1, k, z_dim)
         
-        z_samples = z_samples.unsqueeze(2)  # Shape: (batch, iw, 1, z_dim)
+        z_samples_expanded = z_samples.unsqueeze(2)  # Shape: (batch, iw, 1, z_dim)
 
-        # Compute log probabilities for each sample
+        # Compute log probabilities for each sample under the mixture prior
         log_p_z = ut.log_normal_mixture(
-            z_samples,
+            z_samples_expanded,
             m_mixture.expand(z_samples.size(0), z_samples.size(1), -1, -1),
             v_mixture.expand(z_samples.size(0), z_samples.size(1), -1, -1)
         )  # Shape: (batch, iw)
 
+        # Compute log probabilities for each sample under q(z|x)
         log_q_z_x = ut.log_normal(
-            z_samples.squeeze(2), 
-            m_q.unsqueeze(1), 
+            z_samples,
+            m_q.unsqueeze(1),
             v_q.unsqueeze(1)
         )  # Shape: (batch, iw)
 
         # Decode z to reconstruct x for each sample
-        logits = self.dec(z_samples.squeeze(2))  # Shape: (batch, iw, dim)
+        logits = self.dec(z_samples)  # Shape: (batch, iw, dim)
 
         # Compute log p(x|z)
         log_p_x_given_z = ut.log_bernoulli_with_logits(
@@ -169,13 +170,15 @@ class GMVAE(nn.Module):
                             torch.log(torch.mean(weights_normalized, dim=1)))  # Negative IWAE
 
         # ELBO decomposition terms (KL and reconstruction)
-        kl = torch.mean(log_q_z_x - log_p_z)  # KL divergence term (averaged over samples)
-
+        
+        ### KL Term ###
+        kl = torch.mean(log_q_z_x[:, 0] - log_p_z[:, 0])  # KL divergence term using first sample
+        
+        ### Reconstruction Term ###
         rec_logits = self.dec(ut.sample_gaussian(m_q, v_q))  # Single sample for reconstruction term
         rec = -torch.mean(ut.log_bernoulli_with_logits(x, rec_logits))  # Reconstruction term
 
-        return niwae, kl, rec
-        ### END CODE HERE ###
+        return niwae, kl.item(), rec.item()
         ################################################################################
         # End of code modification
         ################################################################################
