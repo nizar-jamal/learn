@@ -123,31 +123,43 @@ class GMVAE(nn.Module):
         # Encode x to get q(z|x) parameters
         m_q, v_q = self.enc(x)  # Encoder outputs mean and variance of q(z|x)
 
-        # Sample z from q(z|x) using the reparameterization trick
-        z_q = ut.sample_gaussian(m_q.unsqueeze(1).expand(-1, iw, -1), 
-                                v_q.unsqueeze(1).expand(-1, iw, -1))  # Shape: (batch, iw, z_dim)
+        # Sample z from q(z|x) using reparameterization trick
+        batch_size = x.size(0)
+        z_q = ut.sample_gaussian(
+            m_q.unsqueeze(1).expand(-1, iw, -1), 
+            v_q.unsqueeze(1).expand(-1, iw, -1)
+        )  # Shape: (batch_size, iw, z_dim)
 
         # Compute log probabilities for IWAE
-        log_p_z = ut.log_normal_mixture(z_q, m_mixture.squeeze(0), v_mixture.squeeze(0))  # Prior log-prob
-        log_q_z_x = ut.log_normal(z_q, m_q.unsqueeze(1), v_q.unsqueeze(1))  # Posterior log-prob
+        log_p_z = ut.log_normal_mixture(
+            z_q.unsqueeze(2),  # Shape: (batch_size, iw, 1, z_dim)
+            m_mixture.squeeze(0).unsqueeze(0),  # Shape: (1, 1, k, z_dim)
+            v_mixture.squeeze(0).unsqueeze(0)   # Shape: (1, 1, k, z_dim)
+        )  # Shape: (batch_size, iw)
 
-        # Decode z to reconstruct x
-        logits = self.dec(z_q.view(-1, self.z_dim))  # Decoder outputs logits for Bernoulli distribution
-        log_p_x_given_z = ut.log_bernoulli_with_logits(x.unsqueeze(1).expand(-1, iw, -1).reshape(-1, x.shape[-1]), 
-                                                    logits).view(x.size(0), iw)  # Reconstruction term
+        log_q_z_x = ut.log_normal(
+            z_q,
+            m_q.unsqueeze(1), 
+            v_q.unsqueeze(1)
+        )  # Shape: (batch_size, iw)
+
+        logits = self.dec(z_q.view(-1, self.z_dim))  # Decode z
+        log_p_x_given_z = ut.log_bernoulli_with_logits(
+            x.unsqueeze(1).expand(-1, iw, -1).reshape(-1, x.size(1)), 
+            logits
+        ).view(batch_size, iw)  # Reconstruction term
 
         # Compute importance weights
-        log_weights = log_p_x_given_z + log_p_z - log_q_z_x  # Shape: (batch, iw)
-        weights = torch.softmax(log_weights, dim=1)  # Normalize weights
+        log_weights = log_p_x_given_z + log_p_z - log_q_z_x  # Shape: (batch_size, iw)
+        
+        # Normalize weights using log-sum-exp trick
+        niwae = -torch.mean(torch.logsumexp(log_weights - torch.log(torch.tensor(iw)), dim=1))
 
-        # IWAE bound computation
-        iwae_bound = -torch.mean(torch.logsumexp(log_weights - torch.log(torch.tensor(iw)), dim=1))
-
-        # ELBO decomposition (KL and reconstruction terms)
+        # ELBO decomposition (for comparison purposes)
         kl = torch.mean(log_q_z_x - log_p_z)  # KL divergence term (ELBO)
         rec = -torch.mean(log_p_x_given_z)  # Reconstruction term (ELBO)
 
-        return iwae_bound, kl, rec
+        return niwae, kl, rec
         ################################################################################
         # End of code modification
         ################################################################################
