@@ -54,6 +54,37 @@ class FSVAE(nn.Module):
         #   nelbo, kl_z, rec
         ################################################################################
         ### START CODE HERE ###
+        # Encode the input to get q(z|x,y)
+        # The encoder returns parameters of q(z|x,y)
+        z_params = self.enc(x, y)
+        z_m, z_v = ut.gaussian_parameters(z_params, dim=1)  # Mean and variance of q(z|x,y)
+        
+        # Sample z ~ q(z|x,y) using the reparameterization trick
+        z = ut.sample_gaussian(z_m, z_v)
+        
+        # Decode to get the reconstruction parameters p(x|z,y)
+        x_params = self.dec(z, y)
+        
+        # Since we're told that variance is fixed at diag(σ²θ(y,z)) = 1/10 * I
+        # we'll use that value for the reconstruction
+        fixed_var = torch.ones_like(x_params) * 0.1  # 1/10
+        
+        # Compute the reconstruction term: log p(x|z,y)
+        # We're using a Gaussian likelihood with fixed variance as specified
+        rec = ut.log_normal(x, x_params, fixed_var).mean()
+        
+        # Compute the KL divergence between q(z|x,y) and p(z)
+        # where p(z) = N(0, I) as given in the problem statement
+        kl_z = ut.kl_normal(z_m, z_v, 
+                        self.z_prior_m.expand_as(z_m), 
+                        self.z_prior_v.expand_as(z_v)).mean()
+        
+        # Compute the negative ELBO: KL - reconstruction term
+        # Note: ELBO = E[log p(x|z,y)] - KL(q(z|x,y) || p(z))
+        # So negative ELBO = KL - E[log p(x|z,y)]
+        nelbo = kl_z - rec
+        
+        return nelbo, kl_z, -rec
         ### END CODE HERE ###
         ################################################################################
         # End of code modification
