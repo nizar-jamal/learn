@@ -124,16 +124,8 @@ def log_normal_mixture(z, m, v):
     # in the batch
     ################################################################################
     ### START CODE HERE ###
-    # Ensure z has shape (batch, 1, dim) for broadcasting with m and v
-    z_expanded = z.unsqueeze(1)  # Shape becomes (batch, 1, dim)
-
-    # Compute component-wise log probabilities using `log_normal`
-    # Broadcasting will align z_expanded (batch, 1, dim) with m/v (batch, mix, dim)
-    component_log_probs = log_normal(z_expanded, m, v)  # Shape becomes (batch, mix)
-
-    # Compute the final mixture probability using `log_mean_exp`
-    log_prob = log_mean_exp(component_log_probs, dim=1)
-
+    log_probs = log_normal(z.unsqueeze(1), m, v)
+    log_prob = log_mean_exp(log_probs, dim=1)
     return log_prob
     ### END CODE HERE ###
     ################################################################################

@@ -63,7 +63,7 @@ class GMVAE(nn.Module):
 
         # Encode x to get q(z|x) parameters
         m_q, v_q  = self.enc(x)  # Encoder outputs mean and variance of q(z|x)
-        
+
         # Sample z from q(z|x) using the reparameterization trick
         z_q = ut.sample_gaussian(m_q, v_q)  # Shape: (batch, z_dim)
 
@@ -73,7 +73,8 @@ class GMVAE(nn.Module):
 
         # Decode z to reconstruct x
         logits = self.dec(z_q)  # Decoder outputs logits for Bernoulli distribution
-        log_p_x_given_z = -nn.BCEWithLogitsLoss(reduction='none')(logits, x).sum(dim=-1)  # Reconstruction term
+        log_p_x_given_z = ut.log_bernoulli_with_logits(x, logits) 
+        # -nn.BCEWithLogitsLoss(reduction='none')(logits, x).sum(dim=-1)  # Reconstruction term
 
         # Compute KL divergence and reconstruction loss
         kl = torch.mean(log_q_z_x - log_p_z)  # KL divergence term
