@@ -117,7 +117,7 @@ class GMVAE(nn.Module):
         # We provide the learnable prior for you. Familiarize yourself with
         # this object by checking its shape.
         prior = ut.gaussian_parameters(self.z_pre, dim=1)
-        ### START CODE HERE ###
+        ### START CODE HERE ###        
         # First calculate the standard ELBO terms for reporting purposes
         nelbo, kl, rec = self.negative_elbo_bound(x)
         
@@ -127,35 +127,33 @@ class GMVAE(nn.Module):
         # Encode x to get q(z|x) parameters
         m_q, v_q = self.enc(x)  # Shapes: (batch, z_dim)
         
-        # Expand dimensions for importance sampling
-        # Duplicate the means and variances iw times along the batch dimension
-        m_q_expanded = ut.duplicate(m_q, iw)  # Shape: (batch*iw, z_dim)
-        v_q_expanded = ut.duplicate(v_q, iw)  # Shape: (batch*iw, z_dim)
-        x_expanded = ut.duplicate(x, iw)      # Shape: (batch*iw, dim)
+        batch_size = x.size(0)
         
-        # Sample z from q(z|x) using the reparameterization trick
-        z_samples = ut.sample_gaussian(m_q_expanded, v_q_expanded)  # Shape: (batch*iw, z_dim)
+        # Initialize storage for our log weights
+        log_weights = torch.zeros(batch_size, iw, device=x.device)
         
-        # Compute log q(z|x) for each sample
-        log_q_z_x = ut.log_normal(z_samples, m_q_expanded, v_q_expanded)  # Shape: (batch*iw,)
+        # For each importance sample
+        for i in range(iw):
+            # Sample z from q(z|x) using the reparameterization trick
+            z = ut.sample_gaussian(m_q, v_q)  # Shape: (batch, z_dim)
+            
+            # Compute log q(z|x)
+            log_q_z_x = ut.log_normal(z, m_q, v_q)  # Shape: (batch,)
+            
+            # Compute log p(z) under the mixture prior
+            log_p_z = ut.log_normal_mixture(z, m_mixture.squeeze(0), v_mixture.squeeze(0))  # Shape: (batch,)
+            
+            # Decode z to get x reconstruction
+            logits = self.dec(z)  # Shape: (batch, dim)
+            
+            # Compute log p(x|z)
+            log_p_x_given_z = ut.log_bernoulli_with_logits(x, logits)  # Shape: (batch,)
+            
+            # Compute log importance weight: log p(x,z) - log q(z|x)
+            log_weights[:, i] = log_p_x_given_z + log_p_z - log_q_z_x
         
-        # Compute log p(z) for each sample (using mixture of Gaussians prior)
-        log_p_z = ut.log_normal_mixture(z_samples, m_mixture.squeeze(0), v_mixture.squeeze(0))  # Shape: (batch*iw,)
-        
-        # Decode z to reconstruct x
-        logits = self.dec(z_samples)  # Shape: (batch*iw, dim)
-        
-        # Compute log p(x|z) for each sample
-        log_p_x_given_z = ut.log_bernoulli_with_logits(x_expanded, logits)  # Shape: (batch*iw,)
-        
-        # Compute log weights: log p(x,z) - log q(z|x) = log p(x|z) + log p(z) - log q(z|x)
-        log_weights = log_p_x_given_z + log_p_z - log_q_z_x  # Shape: (batch*iw,)
-        
-        # Reshape to group by the original batch dimension
-        log_weights = log_weights.view(-1, iw)  # Shape: (batch, iw)
-        
-        # Compute IWAE bound using log_mean_exp for numerical stability
-        iwae_bound = torch.mean(ut.log_mean_exp(log_weights, dim=1))  # Shape: (1,)
+        # Compute IWAE bound using log-mean-exp for numerical stability
+        iwae_bound = torch.mean(ut.log_mean_exp(log_weights, dim=1))
         
         # Return negative IWAE bound
         niwae = -iwae_bound
