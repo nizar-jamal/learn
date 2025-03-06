@@ -118,49 +118,48 @@ class GMVAE(nn.Module):
         # this object by checking its shape.
         prior = ut.gaussian_parameters(self.z_pre, dim=1)
         ### START CODE HERE ###
+        # First calculate the standard ELBO terms for reporting purposes
+        nelbo, kl, rec = self.negative_elbo_bound(x)
+        
+        # Get Gaussian prior parameters
         m_mixture, v_mixture = prior  # Shapes: (1, k, z_dim)
-
+        
         # Encode x to get q(z|x) parameters
-        m_q, v_q = self.enc(x)  # Encoder outputs mean and variance of q(z|x)
-
-        # Sample z from q(z|x) using reparameterization trick
-        batch_size = x.size(0)
-        z_q = ut.sample_gaussian(
-            m_q.unsqueeze(1).expand(-1, iw, -1), 
-            v_q.unsqueeze(1).expand(-1, iw, -1)
-        )  # Shape: (batch_size, iw, z_dim)
-
-        # Compute log probabilities for IWAE
-        # Expand z_q for comparison with all k components in the mixture
-        z_q_reshaped = z_q.view(batch_size * iw, -1)  # Shape: (batch_size * iw, z_dim)
-        log_p_z = ut.log_normal_mixture(
-            z_q_reshaped.unsqueeze(1),  # Shape: (batch_size, iw, 1, z_dim)
-            m_mixture.expand(batch_size, -1, -1).repeat(iw, 1, 1),  # Shape: (batch_size * iw, k, z_dim)
-            v_mixture.expand(batch_size, -1, -1).repeat(iw, 1, 1)   # Shape: (batch_size * iw, k, z_dim)
-        ).view(batch_size, iw)  # Reshape back to (batch_size, iw)
-
-        log_q_z_x = ut.log_normal(
-            z_q,
-            m_q.unsqueeze(1), 
-            v_q.unsqueeze(1)
-        )  # Shape: (batch_size, iw)
-
-        logits = self.dec(z_q.view(-1, self.z_dim))  # Decode all latent samples
-        log_p_x_given_z = ut.log_bernoulli_with_logits(
-            x.unsqueeze(1).expand(-1, iw, -1).reshape(-1, x.size(1)), 
-            logits
-        ).view(batch_size, iw)  # Reconstruction term
-
-        # Compute importance weights
-        log_weights = log_p_x_given_z + log_p_z - log_q_z_x  # Shape: (batch_size, iw)
-
-        # Normalize weights using log-sum-exp trick
-        niwae = -torch.mean(torch.logsumexp(log_weights - torch.log(torch.tensor(iw)), dim=1))
-
-        # ELBO decomposition (for comparison purposes)
-        kl = torch.mean(log_q_z_x - log_p_z)  # KL divergence term (ELBO)
-        rec = -torch.mean(log_p_x_given_z)  # Reconstruction term (ELBO)
-
+        m_q, v_q = self.enc(x)  # Shapes: (batch, z_dim)
+        
+        # Expand dimensions for importance sampling
+        # Duplicate the means and variances iw times along the batch dimension
+        m_q_expanded = ut.duplicate(m_q, iw)  # Shape: (batch*iw, z_dim)
+        v_q_expanded = ut.duplicate(v_q, iw)  # Shape: (batch*iw, z_dim)
+        x_expanded = ut.duplicate(x, iw)      # Shape: (batch*iw, dim)
+        
+        # Sample z from q(z|x) using the reparameterization trick
+        z_samples = ut.sample_gaussian(m_q_expanded, v_q_expanded)  # Shape: (batch*iw, z_dim)
+        
+        # Compute log q(z|x) for each sample
+        log_q_z_x = ut.log_normal(z_samples, m_q_expanded, v_q_expanded)  # Shape: (batch*iw,)
+        
+        # Compute log p(z) for each sample (using mixture of Gaussians prior)
+        log_p_z = ut.log_normal_mixture(z_samples, m_mixture.squeeze(0), v_mixture.squeeze(0))  # Shape: (batch*iw,)
+        
+        # Decode z to reconstruct x
+        logits = self.dec(z_samples)  # Shape: (batch*iw, dim)
+        
+        # Compute log p(x|z) for each sample
+        log_p_x_given_z = ut.log_bernoulli_with_logits(x_expanded, logits)  # Shape: (batch*iw,)
+        
+        # Compute log weights: log p(x,z) - log q(z|x) = log p(x|z) + log p(z) - log q(z|x)
+        log_weights = log_p_x_given_z + log_p_z - log_q_z_x  # Shape: (batch*iw,)
+        
+        # Reshape to group by the original batch dimension
+        log_weights = log_weights.view(-1, iw)  # Shape: (batch, iw)
+        
+        # Compute IWAE bound using log_mean_exp for numerical stability
+        iwae_bound = torch.mean(ut.log_mean_exp(log_weights, dim=1))  # Shape: (1,)
+        
+        # Return negative IWAE bound
+        niwae = -iwae_bound
+        
         return niwae, kl, rec
         ################################################################################
         # End of code modification
