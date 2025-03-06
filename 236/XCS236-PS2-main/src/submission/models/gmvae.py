@@ -131,11 +131,13 @@ class GMVAE(nn.Module):
         )  # Shape: (batch_size, iw, z_dim)
 
         # Compute log probabilities for IWAE
+        # Expand z_q for comparison with all k components in the mixture
+        z_q_reshaped = z_q.view(batch_size * iw, -1)  # Shape: (batch_size * iw, z_dim)
         log_p_z = ut.log_normal_mixture(
-            z_q.unsqueeze(2),  # Shape: (batch_size, iw, 1, z_dim)
-            m_mixture.squeeze(0).unsqueeze(0),  # Shape: (1, 1, k, z_dim)
-            v_mixture.squeeze(0).unsqueeze(0)   # Shape: (1, 1, k, z_dim)
-        )  # Shape: (batch_size, iw)
+            z_q_reshaped.unsqueeze(1),  # Shape: (batch_size, iw, 1, z_dim)
+            m_mixture.expand(batch_size, -1, -1).repeat(iw, 1, 1),  # Shape: (batch_size * iw, k, z_dim)
+            v_mixture.expand(batch_size, -1, -1).repeat(iw, 1, 1)   # Shape: (batch_size * iw, k, z_dim)
+        ).view(batch_size, iw)  # Reshape back to (batch_size, iw)
 
         log_q_z_x = ut.log_normal(
             z_q,
@@ -143,7 +145,7 @@ class GMVAE(nn.Module):
             v_q.unsqueeze(1)
         )  # Shape: (batch_size, iw)
 
-        logits = self.dec(z_q.view(-1, self.z_dim))  # Decode z
+        logits = self.dec(z_q.view(-1, self.z_dim))  # Decode all latent samples
         log_p_x_given_z = ut.log_bernoulli_with_logits(
             x.unsqueeze(1).expand(-1, iw, -1).reshape(-1, x.size(1)), 
             logits
@@ -151,7 +153,7 @@ class GMVAE(nn.Module):
 
         # Compute importance weights
         log_weights = log_p_x_given_z + log_p_z - log_q_z_x  # Shape: (batch_size, iw)
-        
+
         # Normalize weights using log-sum-exp trick
         niwae = -torch.mean(torch.logsumexp(log_weights - torch.log(torch.tensor(iw)), dim=1))
 
