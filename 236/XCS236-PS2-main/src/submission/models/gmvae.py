@@ -118,47 +118,64 @@ class GMVAE(nn.Module):
         # this object by checking its shape.
         prior = ut.gaussian_parameters(self.z_pre, dim=1)
         ### START CODE HERE ###        
+        m_mixture, v_mixture = prior  # Shapes: (1, k, z_dim)
+        
         # First calculate the standard ELBO terms for reporting purposes
         nelbo, kl, rec = self.negative_elbo_bound(x)
-        
-        # Get Gaussian prior parameters
-        m_mixture, v_mixture = prior  # Shapes: (1, k, z_dim)
         
         # Encode x to get q(z|x) parameters
         m_q, v_q = self.enc(x)  # Shapes: (batch, z_dim)
         
+        # Expand dimensions for importance sampling
+        # Expand means and variances to (batch, iw, z_dim)
+        m_q_expanded = m_q.unsqueeze(1).expand(-1, iw, -1)  # Shape: (batch, iw, z_dim)
+        v_q_expanded = v_q.unsqueeze(1).expand(-1, iw, -1)  # Shape: (batch, iw, z_dim)
+        
+        # Sample z from q(z|x) using the reparameterization trick
+        z_samples = ut.sample_gaussian(m_q_expanded, v_q_expanded)  # Shape: (batch, iw, z_dim)
+        
+        # Decode z to get reconstruction logits
+        # First reshape z_samples to (batch*iw, z_dim) for batch processing
         batch_size = x.size(0)
+        z_samples_flat = z_samples.view(batch_size * iw, -1)
         
-        # Initialize storage for our log weights
-        log_weights = torch.zeros(batch_size, iw, device=x.device)
+        # Pass through decoder
+        logits_flat = self.dec(z_samples_flat)  # Shape: (batch*iw, dim)
         
-        # For each importance sample
-        for i in range(iw):
-            # Sample z from q(z|x) using the reparameterization trick
-            z = ut.sample_gaussian(m_q, v_q)  # Shape: (batch, z_dim)
-            
-            # Compute log q(z|x)
-            log_q_z_x = ut.log_normal(z, m_q, v_q)  # Shape: (batch,)
-            
-            # Compute log p(z) under the mixture prior
-            log_p_z = ut.log_normal_mixture(z, m_mixture.squeeze(0), v_mixture.squeeze(0))  # Shape: (batch,)
-            
-            # Decode z to get x reconstruction
-            logits = self.dec(z)  # Shape: (batch, dim)
-            
-            # Compute log p(x|z)
-            log_p_x_given_z = ut.log_bernoulli_with_logits(x, logits)  # Shape: (batch,)
-            
-            # Compute log importance weight: log p(x,z) - log q(z|x)
-            log_weights[:, i] = log_p_x_given_z + log_p_z - log_q_z_x
+        # Reshape logits back to (batch, iw, dim)
+        logits = logits_flat.view(batch_size, iw, -1)
         
-        # Compute IWAE bound using log-mean-exp for numerical stability
+        # Expand x for reconstruction loss calculation
+        x_expanded = x.unsqueeze(1).expand(-1, iw, -1)  # Shape: (batch, iw, dim)
+        
+        # Compute log p(x|z) for each sample
+        log_p_x_given_z = ut.log_bernoulli_with_logits(x_expanded, logits)  # Shape: (batch, iw)
+        
+        # Compute log q(z|x) for each sample
+        log_q_z_x = ut.log_normal(z_samples, m_q_expanded, v_q_expanded)  # Shape: (batch, iw)
+        
+        # For the mixture prior, we need to compute log p(z) for each sample
+        # Reshape z_samples for mixture calculation: (batch*iw, z_dim)
+        z_for_mixture = z_samples.view(batch_size * iw, -1)
+        
+        # Get log p(z) from mixture prior
+        log_p_z = ut.log_normal_mixture(z_for_mixture, m_mixture.squeeze(0), v_mixture.squeeze(0))
+        
+        # Reshape log_p_z back to (batch, iw)
+        log_p_z = log_p_z.view(batch_size, iw)
+        
+        # Compute log weights: log p(x,z) - log q(z|x) = log p(x|z) + log p(z) - log q(z|x)
+        log_weights = log_p_x_given_z + log_p_z - log_q_z_x  # Shape: (batch, iw)
+        
+        # Compute IWAE bound using log_mean_exp for numerical stability
         iwae_bound = torch.mean(ut.log_mean_exp(log_weights, dim=1))
         
         # Return negative IWAE bound
         niwae = -iwae_bound
         
         return niwae, kl, rec
+
+        ### END CODE HERE ###
         ################################################################################
         # End of code modification
         ################################################################################
