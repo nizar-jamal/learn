@@ -1,0 +1,12 @@
+\points{3b} Recall that $D_{\phi}(\bm{x}) = \sigma(h_{\phi}(\bm{x}))$. Show that the logits $h_{\phi}(\bm{x})$ 
+of the discriminator estimate the log of the likelihood ratio of $\bm{x}$ under the true distribution 
+compared to the model’s distribution; that is, show that if $D_{\phi} = D^{*}$, then
+
+\begin{equation} \label{eq:14}
+    h_{\phi}(\bm{x}) = \log \frac{p_{\text{data}}(\bm{x})}{p_{\theta}(\bm{x})}
+\end{equation}
+
+🐍
+import re
+with open('submission.tex') as f: print((re.search(r'% <SCPD_SUBMISSION_TAG>_3b(.*?)% <SCPD_SUBMISSION_TAG>_3b', f.read(), re.DOTALL)).group(1))
+🐍

@@ -1,0 +1,10 @@
+\points{5d} Let's tweak the alternate objective so that an optimal discriminator exists. Consider the same objective $L_D$ 
+and the same limit $\epsilon \rightarrow 0$. Now, suppose that $D_{\phi}$ is restricted to differentiable functions 
+whose derivative with respect to $x$ is always between -1 and 1. It can still output any real number. Is there now a discriminator $D_{\phi}$ 
+out of this class of functions that minimizes $L_D$? Briefly describe what the optimal $D_{\phi}$ looks like as 
+a function of $x$.
+
+🐍
+import re
+with open('submission.tex') as f: print((re.search(r'% <SCPD_SUBMISSION_TAG>_5d(.*?)% <SCPD_SUBMISSION_TAG>_5d', f.read(), re.DOTALL)).group(1))
+🐍

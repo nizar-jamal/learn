@@ -1,0 +1,12 @@
+\points{5a} Let $p_{\theta}(x) = \calN(x \mid \theta,\epsilon^2)$ and $p_{\text{data}}(x) = \calN(x \mid \theta_0,\epsilon^2)$ 
+be normal distributions with standard deviation $\epsilon$ centered at $\theta \in \Re$ and $\theta_0 \in \Re$ respectively. 
+Show that
+
+\begin{equation} \label{eq:21}
+    \text{KL}(p_{\theta}(x) \mid\mid p_{\text{data}}(x)) = \frac{(\theta - \theta_0)^2}{2\epsilon^2}
+\end{equation}
+
+🐍
+import re
+with open('submission.tex') as f: print((re.search(r'% <SCPD_SUBMISSION_TAG>_5a(.*?)% <SCPD_SUBMISSION_TAG>_5a', f.read(), re.DOTALL)).group(1))
+🐍

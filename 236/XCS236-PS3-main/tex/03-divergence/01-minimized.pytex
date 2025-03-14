@@ -1,0 +1,12 @@
+\points{3a} Show that $L_{D}$ is minimized when $D_{\phi} = D^{*}$, where
+
+\begin{equation} \label{eq:13}
+    D^{*}(\bm{x}) = \frac{p_{\text{data}}(\bm{x})}{p_{\theta}(\bm{x}) + p_{\text{data}}(\bm{x})}
+\end{equation}
+
+\textbf{Hint}: for a fixed $\bm{x}$,what $t$ minimizes $f(t) = - p_{\text{data}}(\bm{x}) \log t - p_{\theta}(\bm{x})\log(1-t)$?
+
+🐍
+import re
+with open('submission.tex') as f: print((re.search(r'% <SCPD_SUBMISSION_TAG>_3a(.*?)% <SCPD_SUBMISSION_TAG>_3a', f.read(), re.DOTALL)).group(1))
+🐍

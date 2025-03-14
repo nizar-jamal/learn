@@ -1,0 +1,16 @@
+\points{2a} Unfortunately, this form of loss for $L_{G}$ suffers from a \textit{vanishing gradient} problem. In terms of
+the discriminator’s logits, the minimax loss is
+
+\begin{equation} \label{eq:8}
+    L_{G}^{\text{minimax}}(\theta; \phi) = \E_{\bm{z} \sim \calN(0,I)}[\log\left(1-\sigma\left(h_{\phi}\left(G_{\theta}\left(\bm{z}\right)\right)\right)\right)]
+\end{equation}
+
+Show that the derivative of $L_{G}^{\text{minimax}}$ with respect to $\theta$ is approximately 0 if $D\left(G_{\theta}\left(\bm{z}\right)\right) \approx 0$, 
+or equivalently, if $h_{\phi}\left(G_{\theta}\left(\bm{z}\right)\right) \ll 0$. You may use the fact that 
+$\sigma^\prime(x) = \sigma(x)(1-\sigma(x))$. Why is this problematic for the training of the generator 
+when the discriminator successfully identifies a fake sample $G_{\theta}(\bm{z})$?
+
+🐍
+import re
+with open('submission.tex') as f: print((re.search(r'% <SCPD_SUBMISSION_TAG>_2a(.*?)% <SCPD_SUBMISSION_TAG>_2a', f.read(), re.DOTALL)).group(1))
+🐍

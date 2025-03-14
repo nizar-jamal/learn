@@ -1,0 +1,13 @@
+\points{3d} Recall that when training VAEs, we minimize the negative ELBO, an upper bound to the negative log likelihood. 
+Show that the negative log likelihood, $- \E_{\bm{x}\sim p_{\text{data}}(\bm{x})}[\log p_{\theta}(\bm{x})]$, can be 
+written as a KL divergence plus an additional term that is constant with respect to $\theta$. We are asking if the 
+KL divergence is equal to $L_G$, so after finding the expression, you will be able to deduce that. Note that the constant term 
+is constant with respect to $\theta$, so it can be another expectation.
+
+Does this mean that a VAE decoder trained with ELBO and a GAN generator trained with the $L_{G}$ defined in the 
+previous part 3c are implicitly learning the same objective? Explain.
+
+🐍
+import re
+with open('submission.tex') as f: print((re.search(r'% <SCPD_SUBMISSION_TAG>_3d(.*?)% <SCPD_SUBMISSION_TAG>_3d', f.read(), re.DOTALL)).group(1))
+🐍

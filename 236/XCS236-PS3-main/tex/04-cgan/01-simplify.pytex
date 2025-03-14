@@ -1,0 +1,30 @@
+\points{4a} Suppose that when $(\bm{x},y) \sim p_{\text{data}}(\bm{x},y)$, there exists a feature mapping $\varphi$ under 
+which $\varphi(\bm{x})$ becomes a mixture of $m$ unit Gaussians, with one Gaussian per class label $y$. 
+Assume that when $(\bm{x}, y) \sim p_{\theta}(\bm{x},y),\varphi(\bm{x})$ also becomes a mixture of $m$ unit Gaussians, 
+again with one Gaussian per class label $y$. Concretely, we assume that the ratio of the conditional probabilities 
+can be written as
+
+\begin{equation} \label{eq:19}
+    \frac{p_{\text{data}}(\bm{x} \mid y)}{p_{\theta}(\bm{x} \mid y)} = \frac{\calN(\varphi(\bm{x}) \mid \bm{\mu_y}, I)}{\calN(\varphi(\bm{x}) \mid \bm{\hat{\mu}_y}, I)}
+\end{equation}
+
+where $\bm{\mu_y}$ and $\bm{\hat{\mu}_y}$ are the means of the Gaussians for $p_{\text{data}}$ and $p_{\theta}$ respectively.
+
+Show that under this simplifying assumption, the optimal discriminator's logits $h^{*}(\bm{x},y)$ can be written in the form
+
+\begin{equation} \label{eq:20}
+    h^{*}(\bm{x},y) = \bm{y}^{T}(A\varphi(\bm{x}) + \bm{b})
+\end{equation}
+
+for some matrix $A$ and vector $\bm{b}$, where $\bm{y}$ is a one-hot vector denoting the class $y$. In this problem, 
+the discriminator's output and logits are related by $D_{\phi}(\bm{x},y) = \sigma(h_{\phi}(\bm{x},y))$. In order to express 
+$\mu_y - \hat{\mu}_y$ in terms of $y$, given that $y$ is a one-hot vector, see if you can write
+$\mu_1 - \hat{\mu}_1$ as a matrix multiplication of $y$ and a matrix whose rows are $\mu_i - \hat{\mu}_i$.
+
+\textbf{Hint}: use the result from problem 3b. Along with that hint, try expanding the PDF for the $p$ terms using 
+the fact that they are normal distributions with known parameters.
+
+🐍
+import re
+with open('submission.tex') as f: print((re.search(r'% <SCPD_SUBMISSION_TAG>_4a(.*?)% <SCPD_SUBMISSION_TAG>_4a', f.read(), re.DOTALL)).group(1))
+🐍

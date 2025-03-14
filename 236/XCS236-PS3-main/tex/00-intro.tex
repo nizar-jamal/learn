@@ -1,0 +1,43 @@
+\textbf{Instructor Note}
+
+PS3 is a fair mixture of written and coding questions. Fortunately, training these models
+will take substantially less time than PS2. However, it is also in your best interest to make sure that your code 
+is properly vectorized so that the models run faster. If you plan on training the models on GPU, make sure your 
+code can also run on CPU since this we will be running the autograder on CPU.
+
+Here are the expected train times for each part of the assignment:
+\begin{enumerate}
+    \item ~5 minutes for \texttt{MAF} flow model
+    \item ~5 minutes for \texttt{GAN} with nonsaturating loss
+    \item ~10 minutes for \texttt{CGAN} with nonsaturating loss
+    \item ~5 minutes for \texttt{GAN} with wasserstein gp loss
+\end{enumerate}
+
+The following is a checklist of various functions you need to implement in the
+submission, in chronological order:
+
+\begin{enumerate}
+    \item \texttt{forward} in \texttt{src/submission/flow\_network.py}
+    \item \texttt{inverse} in \texttt{src/submission/flow\_network.py}
+    \item \texttt{log\_probs} in \texttt{src/submission/flow\_network.py}
+    \item \texttt{loss\_nonsaturating\_g} in \texttt{src/submission/gan.py}
+    \item \texttt{loss\_nonsaturating\_d} in \texttt{src/submission/gan.py}
+    \item \texttt{conditional\_loss\_nonsaturating\_g} in \texttt{src/submission/gan.py}
+    \item \texttt{conditional\_loss\_nonsaturating\_d} in \texttt{src/submission/gan.py}
+    \item \texttt{loss\_wasserstein\_gp\_g} in \texttt{src/submission/gan.py}
+    \item \texttt{loss\_wasserstein\_gp\_d} in \texttt{src/submission/gan.py}
+\end{enumerate}
+
+You will submit the entire \texttt{submission} directory. To do so run the command  below from the \texttt{src} directory
+\begin{verbatim}
+    zip -r submission.zip submission
+\end{verbatim}
+
+or you can choose to zip the folder up manually.
+
+Your submission zip should contain:
+\begin{enumerate}
+    \item \texttt{src/submission/\_\_init\_\_.py}
+    \item \texttt{src/submission/flow\_network.py}
+    \item \texttt{src/submission/gan.py}
+\end{enumerate}

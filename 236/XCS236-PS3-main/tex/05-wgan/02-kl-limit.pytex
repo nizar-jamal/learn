@@ -1,0 +1,9 @@
+\points{5b} Suppose $p_{\theta}(x)$ and $p_{\text{data}}(x)$ both place probability mass in only a very small 
+part of the domain; that is, consider the limit $\epsilon \rightarrow 0$. What happens to $\text{KL}(p_{\theta}(x) \mid\mid p_{\text{data}}(x))$ 
+and its derivative with respect to $\theta$, assuming that $\theta \ne \theta_0$? Why is this problematic 
+for a GAN trained with the loss function $L_{G}$ defined in problem 3c?
+
+🐍
+import re
+with open('submission.tex') as f: print((re.search(r'% <SCPD_SUBMISSION_TAG>_5b(.*?)% <SCPD_SUBMISSION_TAG>_5b', f.read(), re.DOTALL)).group(1))
+🐍

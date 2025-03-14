@@ -1,0 +1,187 @@
+% This contents of this file will be inserted into the _Solutions version of the
+% output tex document.  Here's an example:
+
+% If assignment with subquestion (1.a) requires a written response, you will
+% find the following flag within this document: <SCPD_SUBMISSION_TAG>_1a
+% In this example, you would insert the LaTeX for your solution to (1.a) between
+% the <SCPD_SUBMISSION_TAG>_1a flags.  If you also constrain your answer between the
+% START_CODE_HERE and END_CODE_HERE flags, your LaTeX will be styled as a
+% solution within the final document.
+
+% Please do not use the '<SCPD_SUBMISSION_TAG>' character anywhere within your code.  As expected,
+% that will confuse the regular expressions we use to identify your solution.
+\def\assignmentnum{3 }
+\def\assignmenttitle{XCS236 Problem Set \assignmentnum}
+\input{macros}
+\begin{document}
+\pagestyle{myheadings} \markboth{}{\assignmenttitle}
+
+% <SCPD_SUBMISSION_TAG>_entire_submission
+
+This handout includes space for every question that requires a written response.
+Please feel free to use it to handwrite your solutions (legibly, please).  If
+you choose to typeset your solutions, the |README.md| for this assignment includes
+instructions to regenerate this handout with your typeset \LaTeX{} solutions.
+\ruleskip
+
+\LARGE
+2a
+\normalsize
+% <SCPD_SUBMISSION_TAG>_2a
+\begin{answer}
+    To help you start the proof:
+    Using the chain rule and the fact that $\sigma^{\prime}(x) = \sigma(x)(1-\sigma(x))$,
+
+    \begin{center}
+        $\frac{\partial L_{G}^{\text{minimax}}}{\partial \theta} = \E_{\bm{z} \sim \calN(0,I)}\left[- \frac{\sigma^{\prime}\left(h_{\phi}\left(G_{\theta}\left(\bm{z}\right)\right)\right)}{1 - \sigma\left(h_{\phi}\left(G_{\theta}\left(\bm{z}\right)\right)\right)} \frac{\partial}{\partial \theta} h_{\phi}\left(G_{\theta}\left(\bm{z}\right)\right)\right] = $ \\
+    \end{center}
+
+    % ### START CODE HERE ###
+    % ### END CODE HERE ###
+\end{answer}
+% <SCPD_SUBMISSION_TAG>_2a
+
+\clearpage
+
+\LARGE
+3a
+\normalsize
+% <SCPD_SUBMISSION_TAG>_3a
+\begin{answer}
+    To help you get started with the proof:
+    If we break the expectation up, we see that
+
+    \begin{center}
+        $L_{D}(\phi; \theta) = - \E_{\bm{x} \sim p_{\text{data}}(\bm{x})}[\log D_{\phi}(\bm{x})] - \E_{\bm{x} \sim p_{\theta}(\bm{x})}[\log(1-D_{\phi}(\bm{x}))]$ \\ 
+        $ = - \int p_{\text{data}}(\bm{x}) \log D_{\phi}(\bm{x})d\bm{x} - \int p_{\theta}(\bm{x}) \log(1-D_{\phi}(\bm{x}))d\bm{x}$ \\
+        $ = - \int \left(p_{\text{data}}(\bm{x}) \log D_{\phi}(\bm{x}) + p_{\theta}(\bm{x}) \log(1-D_{\phi}(\bm{x})) \right)d\bm{x}$ \\
+        $ = \int f(D_{\phi}(\bm{x}))d\bm{x}$
+    \end{center}
+
+    We can set $L^{\prime}_D(\phi; \theta) = 0$ to obtain the optimal $L^{\prime}_D$. This yields 
+    
+    \begin{center}
+        $L^{\prime}_D(\phi;\theta) = \frac{d}{d D_{\phi}(\bm{x})} \int f(D_{\phi}(\bm{x}))d\bm{x} = \int \frac{d}{d D_{\phi}(\bm{x})} f(D_{\phi}(\bm{x}))d\bm{x} = 0$
+    \end{center}
+    
+    Now try to apply the hint!
+    % ### START CODE HERE ###
+    % ### END CODE HERE ###
+\end{answer}
+% <SCPD_SUBMISSION_TAG>_3a
+
+\LARGE
+3b
+\normalsize
+% <SCPD_SUBMISSION_TAG>_3b
+\begin{answer}
+    To help you get started, note that
+
+    \begin{center}
+        $D_{\phi}(\bm{x}) = \sigma(h_{\phi}(\bm{x})) = \frac{1}{1 + e^{-h_{\phi}(\bm{x})}}$
+    \end{center}
+
+    Setting this to the expression for $D^{*}(\bm{x})$ in part 3a solution, we find that
+
+    % ### START CODE HERE ###
+    % ### END CODE HERE ###
+\end{answer}
+% <SCPD_SUBMISSION_TAG>_3b
+
+\LARGE
+3c
+\normalsize
+% <SCPD_SUBMISSION_TAG>_3c
+\begin{answer}
+    To get started
+    \begin{center}
+        $L_{G}(\theta; \phi) = \E_{p_{\theta}(\bm{x})}[\log (1-D_{\phi}(\bm{x}))] - \E_{p_{\theta}(\bm{x})}[\log D_{\phi}(\bm{x})]$ \\
+        $ = \E_{p_{\theta}(\bm{x})} \left[\log \frac{1-D_{\phi}(\bm{x})}{D_{\phi}(\bm{x})}\right]$ \\
+    \end{center}
+
+    % ### START CODE HERE ###
+    % ### END CODE HERE ###
+\end{answer}
+% <SCPD_SUBMISSION_TAG>_3c
+
+\LARGE
+3d
+\normalsize
+% <SCPD_SUBMISSION_TAG>_3d
+\begin{answer}
+    % ### START CODE HERE ###
+    % ### END CODE HERE ###
+\end{answer}
+% <SCPD_SUBMISSION_TAG>_3d
+
+\clearpage
+
+\LARGE
+4a
+\normalsize
+% <SCPD_SUBMISSION_TAG>_4a
+\begin{answer}
+    To help you get started:
+    
+    \begin{center}
+        $h_{\phi}(x,y) = \log \frac{p_{\text{data}}(\bm{x},y)}{p_{\theta}(\bm{x}, y)}$ \\
+        $ = \log \frac{p_{\text{data}}(\bm{x} \mid y)}{p_{\theta}(\bm{x} \mid y)} + \log \frac{p_{\text{data}}(y)}{p_{\theta}(y)}$ \\
+        $ = \log \frac{p_{\text{data}}(\bm{x} \mid y)}{p_{\theta}(\bm{x} \mid y)} = $ \\
+    \end{center}
+
+    % ### START CODE HERE ###
+    % ### END CODE HERE ###
+\end{answer}
+% <SCPD_SUBMISSION_TAG>_4a
+
+\clearpage
+
+\LARGE
+5a
+\normalsize
+% <SCPD_SUBMISSION_TAG>_5a
+\begin{answer}
+    To help you get started: 
+    \begin{center}
+        $\text{KL}(p_{\theta}(x) \mid\mid p_{\text{data}}(x)) = \E_{x \sim \calN(\theta, \epsilon^2)}\left[ \log \frac{\exp(- \frac{1}{2\epsilon^2}(x-\theta)^2)}{\exp(- \frac{1}{2\epsilon^2}(x - \theta_0)^2)}\right] = $ \\
+    \end{center}
+
+    % ### START CODE HERE ###
+    % ### END CODE HERE ###
+\end{answer}
+% <SCPD_SUBMISSION_TAG>_5a
+
+
+\LARGE
+5b
+\normalsize
+% <SCPD_SUBMISSION_TAG>_5b
+\begin{answer}
+    % ### START CODE HERE ###
+    % ### END CODE HERE ###
+\end{answer}
+% <SCPD_SUBMISSION_TAG>_5b
+
+\LARGE
+5c
+\normalsize
+% <SCPD_SUBMISSION_TAG>_5c
+\begin{answer}
+    % ### START CODE HERE ###
+    % ### END CODE HERE ###
+\end{answer}
+% <SCPD_SUBMISSION_TAG>_5c
+
+\LARGE
+5d
+\normalsize
+% <SCPD_SUBMISSION_TAG>_5d
+\begin{answer}
+    % ### START CODE HERE ###
+    % ### END CODE HERE ###
+\end{answer}
+% <SCPD_SUBMISSION_TAG>_5d
+
+% <SCPD_SUBMISSION_TAG>_entire_submission
+
+\end{document}

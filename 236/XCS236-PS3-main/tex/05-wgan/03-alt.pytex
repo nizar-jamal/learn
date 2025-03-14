@@ -1,0 +1,21 @@
+\points{5c} To avoid this problem, we'll propose an alternative objective for the discriminator and generator. 
+Consider the following alternative objectives:
+
+\begin{equation} \label{eq:22}
+    L_{D}(\phi; \theta) = \E_{x \sim p_{\theta}(x)} [D_{\phi}(x)] - \E_{x \sim p_{\text{data}}(x)}[D_{\phi}(x)]
+\end{equation}
+
+\begin{equation} \label{eq:23}
+    L_{G}(\theta; \phi) = - \E_{x \sim p_{\theta}(x)} [D_{\phi}(x)]
+\end{equation}
+
+where $D_{\phi}$ is no longer constrained to functions that output a probability; instead $D_{\phi}$ can be a function 
+that outputs any real number. As defined, however, these losses are still problematic. Again consider the limit
+$\epsilon \rightarrow 0$; that is, let $p_{\theta}(x)$ be the distribution that outputs $\theta \in \Re$ with probability 1,
+and let $p_{\text{data}}(x)$ be the distribution that outputs $\theta_0 \in \Re$ with probability 1. 
+Why is there no discriminator $D_{\phi}$ that minimizes this new objective $L_D$?
+
+🐍
+import re
+with open('submission.tex') as f: print((re.search(r'% <SCPD_SUBMISSION_TAG>_5c(.*?)% <SCPD_SUBMISSION_TAG>_5c', f.read(), re.DOTALL)).group(1))
+🐍

@@ -1,0 +1,16 @@
+\points{3c} Consider a generator loss defined by the sum of the minimax loss and the non-saturating loss,
+
+\begin{equation} \label{eq:15}
+    L_{G}(\theta;\phi) = \E_{\bm{x} \sim p_{\theta}(\bm{x})} [\log (1- D_{\phi}(\bm{x}))] - \E_{\bm{x}\sim p_{\theta}(\bm{x})} [\log D_{\phi}(\bm{x})]
+\end{equation}
+
+Show that if $D_{\phi} = D^{*}$, then
+
+\begin{equation} \label{eq:16}
+    L_{G}(\theta; \phi) = \text{KL}(p_{\theta}(\bm{x}) \mid\mid p_{\text{data}}(\bm{x}))
+\end{equation}
+
+🐍
+import re
+with open('submission.tex') as f: print((re.search(r'% <SCPD_SUBMISSION_TAG>_3c(.*?)% <SCPD_SUBMISSION_TAG>_3c', f.read(), re.DOTALL)).group(1))
+🐍
