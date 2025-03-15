@@ -84,33 +84,18 @@ class SSVAE(nn.Module):
         x = ut.duplicate(x, self.y_dim)
         ### START CODE HERE ###
         qm, qv = self.enc(x, y)
-
-        # Decode (z, y) to get pθ(x|z, y) logits
-        z = ut.sample_gaussian(qm, qv)  # Sample z ~ qϕ(z|x, y)
+        z = ut.sample_gaussian(qm, qv) 
         logits = self.dec(z, y)
-
-        # Compute KL divergence between qϕ(y|x) and p(y)
-        log_p_y = torch.log(torch.tensor(1.0 / self.y_dim).to(x.device))  # log p(y), uniform prior
-        kl_y = ut.kl_cat(y_prob, y_logprob, log_p_y)  # KL divergence for categorical distribution
-
-        # Compute KL divergence between qϕ(z|x, y) and p(z)
-        pm, pv = self.z_prior  # Prior mean and variance for z
-        kl_z_grouped_by_y = ut.kl_normal(qm, qv, pm.expand_as(qm), pv.expand_as(qv))  # Grouped by y_dim
-
-        # Compute reconstruction term -log pθ(x|z, y)
+        log_p_y = torch.log(torch.tensor(1.0 / self.y_dim).to(x.device))
+        kl_y = ut.kl_cat(y_prob, y_logprob, log_p_y)
+        pm, pv = self.z_prior
+        kl_z_grouped_by_y = ut.kl_normal(qm, qv, pm.expand_as(qm), pv.expand_as(qv)) 
         rec_grouped_by_y = -ut.log_bernoulli_with_logits(x, logits)
-
-        # Reshape grouped terms to (y_dim, batch)
         kl_z_grouped_by_y = kl_z_grouped_by_y.view(self.y_dim, -1)
         rec_grouped_by_y = rec_grouped_by_y.view(self.y_dim, -1)
-
-        # Compute expectations w.r.t. qϕ(y|x)
-        kl_z = (y_prob.T * kl_z_grouped_by_y).sum(0).mean()  # Expectation over qϕ(y|x)
-        rec = (y_prob.T * rec_grouped_by_y).sum(0).mean()    # Expectation over qϕ(y|x)
-
-        # Combine terms to compute negative ELBO
+        kl_z = (y_prob.T * kl_z_grouped_by_y).sum(0).mean()
+        rec = (y_prob.T * rec_grouped_by_y).sum(0).mean()
         nelbo = kl_y.mean() + kl_z + rec
-
         return nelbo, kl_z, kl_y.mean(), rec
         ### END CODE HERE ###
         ################################################################################

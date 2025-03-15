@@ -91,33 +91,23 @@ class VAE(nn.Module):
         # calculating log_normal w.r.t prior and q
         ################################################################################
         ### START CODE HERE ###
-        # Encode to get mean and variance of qϕ(z|x)
         z_m, z_v = self.enc(x)
-        
-        # Sample multiple z values from qϕ(z|x)
         z_samples = ut.sample_gaussian(z_m.unsqueeze(1).expand(-1, iw, -1), 
-                                    z_v.unsqueeze(1).expand(-1, iw, -1))  # (batch, iw, z_dim)
+                                    z_v.unsqueeze(1).expand(-1, iw, -1))
+        x_logits = self.dec(z_samples) 
+        log_p_x_z = ut.log_bernoulli_with_logits(x.unsqueeze(1).expand(-1, iw, -1), x_logits) 
+        log_p_z = ut.log_normal(z_samples, self.z_prior_m, self.z_prior_v) 
+        log_q_z_x = ut.log_normal(z_samples, z_m.unsqueeze(1), z_v.unsqueeze(1)) 
+
+        log_weights = log_p_x_z + log_p_z - log_q_z_x 
+        max_log_weights = torch.max(log_weights, dim=1, keepdim=True)[0] 
+        weights_normalized = torch.exp(log_weights - max_log_weights) 
         
-        # Decode to get logits for pθ(x|z)
-        x_logits = self.dec(z_samples)  # (batch, iw, dim)
-        
-        # Compute log probabilities
-        log_p_x_z = ut.log_bernoulli_with_logits(x.unsqueeze(1).expand(-1, iw, -1), x_logits)  # (batch, iw)
-        log_p_z = ut.log_normal(z_samples, self.z_prior_m, self.z_prior_v)  # (batch, iw)
-        log_q_z_x = ut.log_normal(z_samples, z_m.unsqueeze(1), z_v.unsqueeze(1))  # (batch, iw)
-        
-        # Compute importance weights
-        log_weights = log_p_x_z + log_p_z - log_q_z_x  # (batch, iw)
-        max_log_weights = torch.max(log_weights, dim=1, keepdim=True)[0]  # To stabilize log-sum-exp
-        weights_normalized = torch.exp(log_weights - max_log_weights)  # (batch, iw)
-        
-        # IWAE bound computation
         niwae = -torch.mean(max_log_weights.squeeze() + 
-                            torch.log(torch.mean(weights_normalized, dim=1)))  # Negative IWAE
+                            torch.log(torch.mean(weights_normalized, dim=1)))
         
-        # ELBO decomposition terms (KL and reconstruction)
-        kl = ut.kl_normal(z_m, z_v, self.z_prior_m, self.z_prior_v).mean()  # KL term
-        rec = ut.log_bernoulli_with_logits(x, self.dec(ut.sample_gaussian(z_m, z_v))).mean()  # Reconstruction term
+        kl = ut.kl_normal(z_m, z_v, self.z_prior_m, self.z_prior_v).mean()
+        rec = ut.log_bernoulli_with_logits(x, self.dec(ut.sample_gaussian(z_m, z_v))).mean() 
         
         return niwae, kl, -rec
         ### END CODE HERE ###
