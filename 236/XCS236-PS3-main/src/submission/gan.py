@@ -157,7 +157,39 @@ def loss_wasserstein_gp_d(g, d, x_real, *, device):
     #   - torch.rand
     #   - torch.autograd.grad(..., create_graph=True)
     ### START CODE HERE ###
+    lambda_gp = 10  # Gradient penalty lambda hyperparameter
+    # Generate fake images using the generator
+    x_fake = g(z).detach()  # Detach to avoid backprop through the generator
+
+    # Discriminator outputs for real and fake data
+    d_real = d(x_real)
+    d_fake = d(x_fake)
+
+    # Interpolation between real and fake samples
+    alpha = torch.rand(batch_size, 1, 1, 1, device=device)
+    x_interpolated = alpha * x_real + (1 - alpha) * x_fake
+    x_interpolated.requires_grad_(True)
+
+    # Discriminator output for interpolated samples
+    d_interpolated = d(x_interpolated)
+
+    # Compute gradient penalty
+    gradients = torch.autograd.grad(
+        outputs=d_interpolated,
+        inputs=x_interpolated,
+        grad_outputs=torch.ones_like(d_interpolated),
+        create_graph=True,
+        retain_graph=True,
+        only_inputs=True
+    )[0]
     
+    gradients_norm = gradients.view(gradients.size(0), -1).norm(2, dim=1)
+    gradient_penalty = lambda_gp * ((gradients_norm - 1) ** 2).mean()
+
+    # Wasserstein loss with gradient penalty
+    d_loss = d_fake.mean() - d_real.mean() + gradient_penalty
+
+    return d_loss    
     ### END CODE HERE ###
     raise NotImplementedError
 
@@ -179,5 +211,15 @@ def loss_wasserstein_gp_g(g, d, x_real, *, device):
     g_loss = None
     
     ### START CODE HERE ###
+    # Generate fake data
+    x_fake = g(z)
+
+    # Discriminator output for fake data
+    d_fake = d(x_fake)
+
+    # Generator loss
+    g_loss = -d_fake.mean()
+
+    return g_loss
     ### END CODE HERE ###
     raise NotImplementedError
