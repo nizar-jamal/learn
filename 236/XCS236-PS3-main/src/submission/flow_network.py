@@ -93,7 +93,12 @@ class MADE(nn.Module):
         x = torch.zeros_like(z)
         log_det = None
         ### START CODE HERE ### 
-        ### END CODE HERE ###
+        h = self.net(z)
+        mu, alpha = h[:, :self.input_size], h[:, self.input_size :]
+        x = mu + torch.exp(alpha) * z
+        log_det = alpha.sum(dim=1)
+        return x, log_det
+        ### END CODE HERE ###     
         raise NotImplementedError
 
     def inverse(self, x):
@@ -104,6 +109,11 @@ class MADE(nn.Module):
         """
         z, log_det = None, None
         ### START CODE HERE ###
+        h = self.net(x)
+        mu, alpha = h[:, :self.input_size], h[:, self.input_size :]
+        z = (x - mu) * torch.exp(-alpha)
+        log_det = -alpha.sum(dim=1)
+        return z, log_det
         ### END CODE HERE ###
         raise NotImplementedError
 
@@ -137,6 +147,24 @@ class MAF(nn.Module):
         """
         log_prob = None
         ### START CODE HERE ###
+        # Initialize log_det to 0 (to accumulate log determinants across flows)
+        log_det = torch.zeros(x.size(0), device=x.device)
+
+        # Start with input x
+        z = x
+
+        # Pass through each flow in the normalizing flow sequence
+        for flow in self.nf:
+            z, ld = flow.inverse(z)  # Compute z and log_det for each flow
+            log_det += ld.squeeze(-1)  # Accumulate log determinants
+
+        # Compute base distribution log probability (Gaussian prior)
+        base_log_prob = self.base_dist.log_prob(z).sum(dim=-1)
+
+        # Combine base distribution log prob and accumulated log determinant
+        log_prob = base_log_prob + log_det
+
+        return log_prob.mean()
         ### END CODE HERE ###
         raise NotImplementedError
 
