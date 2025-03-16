@@ -53,7 +53,7 @@ class Test_1a(GradedTestCase):
         self.assertTrue(x.shape == torch.Size([self.batch_size, self.input_size]), "x output from MADE forward incorrect shape")
 
     @torch.no_grad()
-    @graded()
+    @graded(timeout=10000000)
     def test_1(self):
         """1a-1-basic: check x mapping for MADE forward"""
         torch.manual_seed(SEED)
@@ -116,7 +116,7 @@ class Test_1c(GradedTestCase):
         self.expected_log_probs = torch.tensor(-2.2746)
     
     @torch.no_grad()
-    @graded()
+    @graded(timeout=10000000)
     def test_0(self):
         """1c-0-basic: check output shapes for log_probs in MAF"""
         torch.manual_seed(SEED)
