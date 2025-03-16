@@ -21,6 +21,20 @@ def loss_nonsaturating_d(g, d, x_real, *, device):
     # You may find some or all of the below useful:
     #   - F.binary_cross_entropy_with_logits
     ### START CODE HERE ###
+    # Generate fake images using the generator
+    x_fake = g(z)
+    
+    # Discriminator logits for real and fake images
+    real_logits = d(x_real)
+    fake_logits = d(x_fake.detach())
+    
+    # Compute discriminator loss using binary cross-entropy with logits
+    real_loss = F.binary_cross_entropy_with_logits(real_logits, torch.ones_like(real_logits))
+    fake_loss = F.binary_cross_entropy_with_logits(fake_logits, torch.zeros_like(fake_logits))
+    
+    d_loss = real_loss + fake_loss
+    return d_loss
+
     ### END CODE HERE ###
     raise NotImplementedError
 
@@ -43,6 +57,16 @@ def loss_nonsaturating_g(g, d, x_real, *, device):
     # You may find some or all of the below useful:
     #   - F.logsigmoid
     ### START CODE HERE ###
+    # Generate fake images using the generator
+    x_fake = g(z)
+    
+    # Discriminator logits for fake images
+    fake_logits = d(x_fake)
+    
+    # Compute generator loss using negative log sigmoid of discriminator output
+    g_loss = -F.logsigmoid(fake_logits).mean()
+    
+    return g_loss    
     ### END CODE HERE ###
     raise NotImplementedError
 
@@ -111,6 +135,7 @@ def loss_wasserstein_gp_d(g, d, x_real, *, device):
     #   - torch.rand
     #   - torch.autograd.grad(..., create_graph=True)
     ### START CODE HERE ###
+    
     ### END CODE HERE ###
     raise NotImplementedError
 
