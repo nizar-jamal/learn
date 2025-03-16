@@ -89,6 +89,19 @@ def conditional_loss_nonsaturating_d(g, d, x_real, y_real, *, device):
     d_loss = None
 
     ### START CODE HERE ###
+    # Generate fake images using the generator
+    x_fake = g(z, y_real)  # Generate fake images conditioned on labels
+    
+    # Discriminator outputs for real and fake images
+    logits_real = d(x_real, y_real)  # Logits for real images
+    logits_fake = d(x_fake.detach(), y_real)  # Logits for fake images
+    
+    # Compute discriminator loss
+    loss_real = F.binary_cross_entropy_with_logits(logits_real, torch.ones_like(logits_real))
+    loss_fake = F.binary_cross_entropy_with_logits(logits_fake, torch.zeros_like(logits_fake))
+    
+    d_loss = loss_real + loss_fake
+    return d_loss 
     ### END CODE HERE ###
     raise NotImplementedError
 
@@ -111,6 +124,15 @@ def conditional_loss_nonsaturating_g(g, d, x_real, y_real, *, device):
     g_loss = None
 
     ### START CODE HERE ###
+    x_fake = g(z, y_real)  # Generate fake images conditioned on labels
+    
+    # Discriminator output for fake images
+    logits_fake = d(x_fake, y_real)  # Logits for fake images
+    
+    # Compute generator loss
+    g_loss = F.binary_cross_entropy_with_logits(logits_fake, torch.ones_like(logits_fake))
+    
+    return g_loss
     ### END CODE HERE ###
     raise NotImplementedError
 
