@@ -147,23 +147,13 @@ class MAF(nn.Module):
         """
         log_prob = None
         ### START CODE HERE ###
-        # Initialize log_det to 0 (to accumulate log determinants across flows)
         log_det = torch.zeros(x.size(0), device=x.device)
-
-        # Start with input x
         z = x
-
-        # Pass through each flow in the normalizing flow sequence
         for flow in self.nf:
-            z, ld = flow.inverse(z)  # Compute z and log_det for each flow
-            log_det += ld.squeeze(-1)  # Accumulate log determinants
-
-        # Compute base distribution log probability (Gaussian prior)
+            z, ld = flow.inverse(z)
+            log_det += ld.squeeze(-1)
         base_log_prob = self.base_dist.log_prob(z).sum(dim=-1)
-
-        # Combine base distribution log prob and accumulated log determinant
         log_prob = base_log_prob + log_det
-
         return log_prob.mean()
         ### END CODE HERE ###
         raise NotImplementedError
