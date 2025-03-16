@@ -21,20 +21,13 @@ def loss_nonsaturating_d(g, d, x_real, *, device):
     # You may find some or all of the below useful:
     #   - F.binary_cross_entropy_with_logits
     ### START CODE HERE ###
-    # Generate fake images using the generator
     x_fake = g(z)
-    
-    # Discriminator logits for real and fake images
     real_logits = d(x_real)
     fake_logits = d(x_fake.detach())
-    
-    # Compute discriminator loss using binary cross-entropy with logits
     real_loss = F.binary_cross_entropy_with_logits(real_logits, torch.ones_like(real_logits))
     fake_loss = F.binary_cross_entropy_with_logits(fake_logits, torch.zeros_like(fake_logits))
-    
     d_loss = real_loss + fake_loss
     return d_loss
-
     ### END CODE HERE ###
     raise NotImplementedError
 
@@ -57,15 +50,9 @@ def loss_nonsaturating_g(g, d, x_real, *, device):
     # You may find some or all of the below useful:
     #   - F.logsigmoid
     ### START CODE HERE ###
-    # Generate fake images using the generator
     x_fake = g(z)
-    
-    # Discriminator logits for fake images
     fake_logits = d(x_fake)
-    
-    # Compute generator loss using negative log sigmoid of discriminator output
     g_loss = -F.logsigmoid(fake_logits).mean()
-    
     return g_loss    
     ### END CODE HERE ###
     raise NotImplementedError
@@ -89,17 +76,11 @@ def conditional_loss_nonsaturating_d(g, d, x_real, y_real, *, device):
     d_loss = None
 
     ### START CODE HERE ###
-    # Generate fake images using the generator
-    x_fake = g(z, y_real)  # Generate fake images conditioned on labels
-    
-    # Discriminator outputs for real and fake images
-    logits_real = d(x_real, y_real)  # Logits for real images
-    logits_fake = d(x_fake.detach(), y_real)  # Logits for fake images
-    
-    # Compute discriminator loss
+    x_fake = g(z, y_real)
+    logits_real = d(x_real, y_real)
+    logits_fake = d(x_fake.detach(), y_real)
     loss_real = F.binary_cross_entropy_with_logits(logits_real, torch.ones_like(logits_real))
     loss_fake = F.binary_cross_entropy_with_logits(logits_fake, torch.zeros_like(logits_fake))
-    
     d_loss = loss_real + loss_fake
     return d_loss 
     ### END CODE HERE ###
@@ -124,14 +105,9 @@ def conditional_loss_nonsaturating_g(g, d, x_real, y_real, *, device):
     g_loss = None
 
     ### START CODE HERE ###
-    x_fake = g(z, y_real)  # Generate fake images conditioned on labels
-    
-    # Discriminator output for fake images
-    logits_fake = d(x_fake, y_real)  # Logits for fake images
-    
-    # Compute generator loss
+    x_fake = g(z, y_real)
+    logits_fake = d(x_fake, y_real)
     g_loss = F.binary_cross_entropy_with_logits(logits_fake, torch.ones_like(logits_fake))
-    
     return g_loss
     ### END CODE HERE ###
     raise NotImplementedError
@@ -157,23 +133,14 @@ def loss_wasserstein_gp_d(g, d, x_real, *, device):
     #   - torch.rand
     #   - torch.autograd.grad(..., create_graph=True)
     ### START CODE HERE ###
-    lambda_gp = 10  # Gradient penalty lambda hyperparameter
-    # Generate fake images using the generator
-    x_fake = g(z).detach()  # Detach to avoid backprop through the generator
-
-    # Discriminator outputs for real and fake data
+    lambda_gp = 10
+    x_fake = g(z).detach()
     d_real = d(x_real)
     d_fake = d(x_fake)
-
-    # Interpolation between real and fake samples
     alpha = torch.rand(batch_size, 1, 1, 1, device=device)
-    x_interpolated = alpha * x_real + (1 - alpha) * x_fake
+    x_interpolated = alpha * x_fake + (1 - alpha) * x_real
     x_interpolated.requires_grad_(True)
-
-    # Discriminator output for interpolated samples
     d_interpolated = d(x_interpolated)
-
-    # Compute gradient penalty
     gradients = torch.autograd.grad(
         outputs=d_interpolated,
         inputs=x_interpolated,
@@ -182,13 +149,9 @@ def loss_wasserstein_gp_d(g, d, x_real, *, device):
         retain_graph=True,
         only_inputs=True
     )[0]
-    
     gradients_norm = gradients.view(gradients.size(0), -1).norm(2, dim=1)
     gradient_penalty = lambda_gp * ((gradients_norm - 1) ** 2).mean()
-
-    # Wasserstein loss with gradient penalty
     d_loss = d_fake.mean() - d_real.mean() + gradient_penalty
-
     return d_loss    
     ### END CODE HERE ###
     raise NotImplementedError
@@ -211,15 +174,9 @@ def loss_wasserstein_gp_g(g, d, x_real, *, device):
     g_loss = None
     
     ### START CODE HERE ###
-    # Generate fake data
     x_fake = g(z)
-
-    # Discriminator output for fake data
     d_fake = d(x_fake)
-
-    # Generator loss
     g_loss = -d_fake.mean()
-
     return g_loss
     ### END CODE HERE ###
     raise NotImplementedError
