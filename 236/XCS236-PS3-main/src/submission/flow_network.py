@@ -92,11 +92,12 @@ class MADE(nn.Module):
         """
         x = torch.zeros_like(z)
         log_det = None
-        ### START CODE HERE ### 
-        h = self.net(z)
-        mu, alpha = h[:, :self.input_size], h[:, self.input_size :]
-        x = mu + torch.exp(alpha) * z
-        log_det = alpha.sum(dim=1)
+        ### START CODE HERE ###
+        for i in range(z.size(1)):
+            h = self.net(x)
+            mu, alpha = h[:, :self.input_size], h[:, self.input_size :]
+            x = mu + torch.exp(alpha) * z
+            log_det = alpha.sum(dim=1)
         return x, log_det
         ### END CODE HERE ###     
         raise NotImplementedError
