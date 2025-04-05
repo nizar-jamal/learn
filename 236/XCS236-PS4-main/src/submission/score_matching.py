@@ -30,7 +30,20 @@ def denoising_score_matching_objective(
     mean = theta["mean"]
     log_var = theta["log_var"]
     ### START CODE HERE ###
-    pass
+    # Add Gaussian noise to the input tensor
+    noisy_x = add_noise(x, noise_std)
+
+    # Compute the target score for denoising
+    target_score = compute_target_score(x, noisy_x, noise_std)
+
+    # Compute the model's score function for the noisy inputs
+    model_score = compute_gaussian_score(noisy_x, mean, log_var)
+
+    # Compute the squared L2 norm of the difference between target and model scores
+    score_diff = target_score - model_score
+    objective = compute_l2norm_squared(score_diff).mean()  # Average over batch
+
+    return objective
     ### END CODE HERE ###
 
 
@@ -51,5 +64,18 @@ def score_matching_objective(
     log_var = theta["log_var"]
 
     ### START CODE HERE ###
-    pass
+    # Compute log probability of x using the Gaussian distribution defined by theta
+    log_p = log_p_theta(x, mean, log_var)
+
+    # Compute the score function ∇_x log p(x)
+    score = compute_score(log_p, x)
+
+    # Compute divergence of the score function ∇_x ⋅ sθ(x)
+    divergence = compute_divergence(score, x)
+
+    # Compute the objective value as ||sθ(x)||^2 + 2 * divergence
+    l2_norm_squared = compute_l2norm_squared(score)
+    objective = l2_norm_squared.mean() + 2 * divergence.mean()
+
+    return objective
     ### END CODE HERE ###

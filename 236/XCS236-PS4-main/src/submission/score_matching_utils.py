@@ -31,7 +31,9 @@ def log_p_theta(
         We sum over the last dimension to obtain a tensor fo shape (B,)
     """
     ### START CODE HERE ###
-    pass
+    var = torch.exp(log_var)
+    log_prob = -0.5 * (torch.log(2 * torch.pi * var) + ((x - mean) ** 2) / var)
+    return log_prob.sum(dim=-1) 
     ### END CODE HERE ###
 
 
@@ -49,7 +51,7 @@ def compute_l2norm_squared(vector: torch.Tensor) -> torch.Tensor:
         L2 norm squared of the vector.
     """
     ### START CODE HERE ###
-    pass
+    return (vector ** 2).sum(dim=-1)  
     ### END CODE HERE ###
 
 
@@ -70,7 +72,8 @@ def add_noise(x: torch.Tensor, noise_std: float) -> torch.Tensor:
         The input tensor with added Gaussian noise.
     """
     ### START CODE HERE ###
-    pass
+    noise = torch.randn_like(x) * noise_std
+    return x + noise
     ### END CODE HERE ###
 
 
@@ -95,7 +98,8 @@ def compute_gaussian_score(
         The score function evaluated at x.
     """
     ### START CODE HERE ###
-    pass
+    var = torch.exp(log_var)
+    return -(x - mean) / var  
     ### END CODE HERE ###
 
 
@@ -125,7 +129,7 @@ def compute_target_score(
         The target score
     """
     ### START CODE HERE ###
-    pass
+    return -(noisy - x) / (std ** 2)
     ### END CODE HERE ###
 
 
@@ -149,7 +153,16 @@ def compute_score(log_p: torch.Tensor, x: torch.Tensor) -> torch.Tensor:
 
     """
     ### START CODE HERE ###
-    pass
+    grad_outputs = torch.ones_like(log_p)
+    score = autograd.grad(
+        outputs=log_p,
+        inputs=x,
+        grad_outputs=grad_outputs,
+        create_graph=True,
+        retain_graph=True,
+        only_inputs=True,
+    )[0]
+    return score
     ### END CODE HERE ###
 
 
