@@ -1,0 +1,9 @@
+\points{2a} \textbf{Tractability}
+
+In our discrete space where $\calX = \{0,1\}^d$, consider the Hamming distance of size $k$. Show how the learning objective quickly 
+becomes intractable and why in practice Monte Carlo sampling is used. Please explain your answer in terms of big-O complexity.
+
+🐍
+import re
+with open('submission.tex') as f: print((re.search(r'% <SCPD_SUBMISSION_TAG>_2b(.*?)% <SCPD_SUBMISSION_TAG>_2b', f.read(), re.DOTALL)).group(1))
+🐍

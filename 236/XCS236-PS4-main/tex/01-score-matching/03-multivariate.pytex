@@ -1,0 +1,10 @@
+\points{1c} \textbf{Generalization to Multivariate Gaussian}
+
+Extend the result of part b. to a multivariate Gaussian distribution $p(\bx) = \calN(\bx \mid \boldsymbol{\mu}, \boldsymbol{\Sigma})$. 
+Derive the expression for the score matching loss for the multivariate case, and explain the challenges posed by the covariance matrix $\boldsymbol{\Sigma}$ 
+in higher dimensions.
+
+🐍
+import re
+with open('submission.tex') as f: print((re.search(r'% <SCPD_SUBMISSION_TAG>_1c(.*?)% <SCPD_SUBMISSION_TAG>_1c', f.read(), re.DOTALL)).group(1))
+🐍

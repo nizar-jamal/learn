@@ -1,0 +1,9 @@
+\points{1a} \textbf{Derive the score function}
+
+The score function is defined as the gradient of the log-density function with respect to $x$, i.e., $\nabla_x \log p(x)$. 
+Derive the score function for the univariate Gaussian distribution.
+
+🐍
+import re
+with open('submission.tex') as f: print((re.search(r'% <SCPD_SUBMISSION_TAG>_1a(.*?)% <SCPD_SUBMISSION_TAG>_1a', f.read(), re.DOTALL)).group(1))
+🐍

@@ -1,0 +1,37 @@
+\section{Applications to Inpainting}
+
+\subsubsection*{Background}
+Inpainting in DDPM involves reconstructing missing regions of an image while retaining the known regions. This is achieved by blending two components:
+\begin{enumerate}
+    \item The noisy image generated during the diffusion process, which provides a starting point for reconstruction.
+    \item The noised version of the original, uncorrupted image for the regions specified as "known" by a mask.
+\end{enumerate}
+
+\subsubsection*{Task Explanation}
+The goal is to update the noisy image $x_t$ at timestep $t$, such that:
+\begin{itemize}
+    \item Known regions (indicated by a binary mask $m = 0$) are retained from $x_t$,
+    \item Missing regions (indicated by \( m = 1 \)) are replaced with the noisy version of the original image $x_{\text{orig}}$, 
+    created using the forward noise schedule.
+\end{itemize}
+
+This blending operation can be written as a mathematical formula involving:
+\begin{itemize}
+    \item The noisy image $x_t$,
+    \item The original image $x_{\text{orig}}$,
+    \item The binary mask $m$,
+    \item A function that adds noise to $x_{\text{orig}}$ according to the diffusion schedule, $x_{\text{orig\_noisy}}$.
+\end{itemize}
+
+The forward process to add noise can be written as
+\[
+        x_t = \sqrt{\bar{\alpha}_t}\, x_{t-1} \;+\; \sqrt{\,1 - \bar{\alpha}_t\,}\,\epsilon
+\]
+
+where $\bar{\alpha}_t$ is hyperparameter constant and $\epsilon$ is the noise term.
+
+\begin{enumerate}[label=(\alph*)]
+    \item \input{05-inpaint/01-formula}
+
+    \item \input{05-inpaint/02-ddpm-inpaint}
+\end{enumerate}

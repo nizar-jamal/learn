@@ -1,0 +1,8 @@
+\points{4c} \textbf{DDPM vs DDIM}
+
+What differences in sample quality and speed do you observe between DDPM and DDIM sampling?
+
+🐍
+import re
+with open('submission.tex') as f: print((re.search(r'% <SCPD_SUBMISSION_TAG>_4c(.*?)% <SCPD_SUBMISSION_TAG>_4c', f.read(), re.DOTALL)).group(1))
+🐍

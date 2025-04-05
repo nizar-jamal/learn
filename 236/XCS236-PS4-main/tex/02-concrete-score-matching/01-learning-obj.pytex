@@ -1,0 +1,9 @@
+\points{2a} \textbf{Learning Objective}
+
+Simplify the learning objective for concrete score matching with a Hamming distance of 1 to remove dependency on the concrete score of the true 
+data distribution $c_{p_{\text{data}}}$.
+
+🐍
+import re
+with open('submission.tex') as f: print((re.search(r'% <SCPD_SUBMISSION_TAG>_2a(.*?)% <SCPD_SUBMISSION_TAG>_2a', f.read(), re.DOTALL)).group(1))
+🐍

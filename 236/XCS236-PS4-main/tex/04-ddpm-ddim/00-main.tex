@@ -1,0 +1,40 @@
+\section{Denoising Diffusion Probabilistic Models}
+
+Diffusion models generate samples by starting from random noise and iteratively denoising it, guided by a learned model. Two common sampling approaches are:
+
+\begin{enumerate}
+    \item \textbf{DDPM (Denoising Diffusion Probabilistic Models):} A step-by-step Markovian reverse process that typically uses many steps but ensures high-quality reconstructions.
+    \item \textbf{DDIM (Denoising Diffusion Implicit Models):} A non-Markovian approach allowing deterministic sampling and fewer steps, making sampling faster.
+\end{enumerate}
+
+\subsection*{Background}
+
+Consider a forward diffusion process that gradually adds Gaussian noise to an initial image $x_0$ over $T$ steps. Define a noise schedule $\{\beta_t\}$ and set $\alpha_t = 1 - \beta_t$.
+
+\subsubsection*{Forward Process}
+The forward process is:
+\[
+    q(x_t \mid x_{t-1}) = \calN(x_t; \sqrt{\alpha_t}x_{t-1}, (1-\alpha_t)I).
+\]
+
+After many steps, $x_T$ is approximately isotropic Gaussian noise.
+
+\subsubsection*{Reverse Process}
+We seek to reverse the forward process:
+\[
+    p_\theta(x_{t-1} \mid x_t) = \calN(x_{t-1}; \mu_\theta(x_t, t), \sigma_t^2 I).
+\]
+
+The model (e.g., a \href{https://arxiv.org/pdf/1505.04597}{UNet}) predicts the noise $\epsilon_\theta(x_t, t)$, from which we can estimate the original sample:
+\[
+x_0 \approx \frac{x_t - \sqrt{1-\bar{\alpha}_t}\,\epsilon_\theta(x_t,t)}{\sqrt{\bar{\alpha}_t}},
+\]
+where $\bar{\alpha}_t = \prod_{s=1}^t \alpha_s$.
+
+\begin{enumerate}[label=(\alph*)]
+    \item \input{04-ddpm-ddim/01-sample-ddpm-ddim}
+
+    \item \input{04-ddpm-ddim/02-markov-ddim}
+
+    \item \input{04-ddpm-ddim/03-compare}
+\end{enumerate}

@@ -1,0 +1,14 @@
+\points{5a} \textbf{Inpainting Formula}
+
+Express the inpainting update mathematically, ensuring that:
+\begin{itemize}
+    \item For $m = 0$, the value is taken directly from $x_{\text{orig\_noisy}}$,
+    \item For $m = 1$, the value is taken from the noised version of $x_t$.
+\end{itemize}
+
+The expression derived here will be implemented in \texttt{apply\_inpainting\_mask} in the next question.
+
+🐍
+import re
+with open('submission.tex') as f: print((re.search(r'% <SCPD_SUBMISSION_TAG>_5a(.*?)% <SCPD_SUBMISSION_TAG>_5a', f.read(), re.DOTALL)).group(1))
+🐍

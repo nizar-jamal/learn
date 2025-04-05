@@ -1,0 +1,37 @@
+\section{Concrete Score Matching}
+
+\textbf{Concrete Score matching} is a framework for estimating discrete probability distributions by learning a score function tailored to discrete data. 
+It extends traditional score matching, which is originally designed for continuous data, to handle discrete variables by leveraging neighborhood structures.
+
+The \textbf{neighborhood mapping} $\calN$ identifies all data points that are considered neighbors of a particular example $\bx$. 
+Formally, we denote $\calN(\bx : \calX \rightarrow \calX^{K}$ as the function mapping each example 
+$\bx \in \calX$ to a set of neighbors, such that $\calN(\bx) = \{ \bx_{n_1},...,\bx_{n_k}\}$ 
+and $K = \mid \calN(\bx) \mid$.
+
+In this problem, we will consider a discrete data setting of length $d$: $\calX = \{0,1\}^d$. For each $\bx \in \calX$, 
+the neighborhood $\calN(\bx)$ consists of all vectors that differ from $\bx$ by exactly one bit. 
+
+More formally, In other words, two vectors are neighbors if their \textbf{Hamming distance} is equal to 1.
+\begin{align}
+\calN(\bx) = \{\mathbf{x'} \in \calX : \text{Hamming}(\bx,\mathbf{x'}) = 1\}
+\end{align}
+
+Then, the \textbf{Concrete score}
+$c_{p_{\text{data}}}(\bx;\calN) : \calX \rightarrow \mathbb{R}^{\mid \calN(\bx) \mid}$ for a given distribution $p_{\text{data}}(\bx)$ evaluated at $\bx$ is:
+
+\begin{align}
+    c_{p_{\text{data}}}(\bx; \calN) \triangleq \left[ \frac{p_{\text{data}}(\bx_{n_1}) - p_{\text{data}}(\bx)}{p_{\text{data}}(\bx)},...,\frac{p_{\text{data}}(\bx_{n_k})-p_{\text{data}}(\bx)}{p_{\text{data}}(\bx)} \right]^{\top}
+\end{align}
+
+The objective of Concrete Score Matching is to learn a score function that minimizes the discrepancy between the estimated score and the true score derived from the data distribution. This is achieved by defining an objective function that quantifies this discrepancy:
+\begin{align}
+    \mathcal{L_{\text{CSM}}}(\theta) &= \sum_{\bx} p_{\text{data}}(\bx) \left\| c_{\theta}(\bx; \calN) -c_{p_{\text{data}}}(\bx; \calN) \right\|^2_2 
+\end{align}
+
+where \( c_{\theta}(\bx; \calN) \) is the parameterized score function we aim to learn.
+
+\begin{enumerate}[label=(\alph*)]
+    \item \input{02-concrete-score-matching/01-learning-obj}
+
+    \item \input{02-concrete-score-matching/02-complexity}
+\end{enumerate}

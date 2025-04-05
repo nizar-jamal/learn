@@ -1,0 +1,9 @@
+\points{3b} \textbf{Sliced Score Matching}
+
+Given the definition of Hutchinson's Estimator, explain how it can be used to approximate the previous objective. 
+Then derive the Sliced Score Matching Objective and explain, by providing the big-O complexity, why minimizing this objective is faster than the Exact Score Matching.
+
+🐍
+import re
+with open('submission.tex') as f: print((re.search(r'% <SCPD_SUBMISSION_TAG>_3b(.*?)% <SCPD_SUBMISSION_TAG>_3b', f.read(), re.DOTALL)).group(1))
+🐍

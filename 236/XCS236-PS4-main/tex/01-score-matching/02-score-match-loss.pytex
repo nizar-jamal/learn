@@ -1,0 +1,17 @@
+\points{1b} \textbf{Score Matching Loss}
+
+The score matching loss is defined as:
+\begin{align}
+    L(\theta) &= \mathbb{E}_{p(x)} \left[ \frac{1}{2} \left\| \nabla_x \log p(x) - \nabla_x \log q_\theta(x) \right\|^2 \right]
+\end{align}
+
+where $p(x)$ is the true distribution, and $q_\theta(x)$ is a model distribution parameterized by $\theta$.
+
+Using the score function derived in part a, compute the score matching loss for the univariate Gaussian model, assuming that $p(x) = \calN(x \mid \mu, \sigma^2)$ 
+and $q_\theta(x) = \calN(x \mid \mu_\theta, \sigma_\theta^2)$. We are looking for a final derivation $A^2(\mu^2 + \sigma^2) + 2AB \mu + B^2$ where $A$ and $B$ are expressed in terms of
+$\sigma$, $\mu$, $\mu_{\theta}$, and $\sigma_{\theta}$. 
+
+🐍
+import re
+with open('submission.tex') as f: print((re.search(r'% <SCPD_SUBMISSION_TAG>_1b(.*?)% <SCPD_SUBMISSION_TAG>_1b', f.read(), re.DOTALL)).group(1))
+🐍

@@ -1,0 +1,30 @@
+\points{4b} \textbf{DDIM as Markovian Process}
+
+We wish to introduce a Markovian variant of DDIM, we can incorporate a noise term at each step to make it probabilistic. 
+Consider a parameter $\sigma_t$ that controls the amount of noise injected back into the process. By doing so, we can smoothly transition 
+from a DDIM-like deterministic sampler (when $\sigma_t=0$) to a full stochastic, Markovian process (when $\sigma_t>0$).
+
+
+To make the previous step Markovian, we introduce a noise term with variance controlled by $\sigma_t$, which is described by the formula (16) 
+in \href{https://arxiv.org/pdf/2010.02502}{the DDIM paper}. Let $z \sim \mathcal{N}(0,I)$ be a standard Gaussian noise sample. 
+The Markovian variant of the DDIM update can be written as:
+
+\[
+x_{t-1} =
+\sqrt{\bar{\alpha}_{t-1}} x_0
++ 
+\underbrace{\sqrt{1 - \bar{\alpha}_{t-1} - \sigma_t^2}\,\epsilon}_{\text{\texttt{predict\_sample\_direction}}} 
++ 
+\underbrace{\sigma_t z}_{\text{\texttt{stochasticity\_term}}}.
+\]
+
+Please implement the following functions from the :
+\begin{itemize}
+    \item \texttt{get\_stochasticity\_std}
+    \item \texttt{predict\_sample\_direction}
+    \item \texttt{stochasticity\_term}
+\end{itemize}
+
+to accurately reproduce the update method described in the \href{https://arxiv.org/pdf/2010.02502}{the DDIM paper} by the formulas (12) and (16).
+
+Run the experiment to generate few samples with \textbf{eta}=0, 0.2, 0.5, 0.75, 1 for \textbf{num\_steps} = 10 and provide a comment.

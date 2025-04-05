@@ -1,0 +1,7 @@
+dimensions: [8, 64, 128]
+batch_sizes: [8, 16, 24]
+runs:
+  time_track: 1
+  memory_track: 1
+noise_std: 0.1
+output_dir: "score_matching_results"

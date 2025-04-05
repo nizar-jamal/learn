@@ -1,0 +1,42 @@
+\section{Score-Based Diffusion Models}
+
+\textbf{Score-based diffusion models} are a class of generative models that train by aligning the model's score function with the true data 
+distribution's score function. The \textbf{score function} of a probability distribution $p(x)$ is defined as the gradient of the log-density, 
+$\nabla_x \log p(x)$. In score-based models, the objective is to learn a function $s_\theta(x)$ that approximates the true score function
+$\nabla_x \log p_{\text{data}}(x)$.
+
+The training objective is derived by minimizing the \textbf{Euclidean distance} between the model's score function and the true score function across the 
+data distribution. Mathematically, this can be expressed as:
+
+\begin{align}
+    \mathcal{J}(\theta) &= \mathbb{E}_{p_{\text{data}}(x)} \left[ \left\| s_\theta(x) - \nabla_x \log p_{\text{data}}(x) \right\|^2 \right]
+\end{align}
+
+Through integration by parts, this objective can be simplified to a form that involves the trace of the Jacobian of the model's score function with 
+respect to the input, along with a constant term. The simplified objective is given by:
+
+\begin{align}
+    \mathcal{J}(\theta) &= \mathbb{E}_{p_{\text{data}}(x)} \left[ \left\| s_\theta(x) \right\|^2 + 2 \, \text{Tr} \left( \nabla_x s_\theta(x) \right) \right] + C
+\end{align}
+
+where $C$ is a constant.
+
+When $x$ is high dimensional or its trace is not explicitly available in full form, we can use the \textbf{Hutchinson's Estimator} which is an unbiased 
+approximation of the trace of a matrix using random vectors. 
+
+More formally, for a symmetric matrix $A \in \mathbb{R}^{n \text{x} n}$ and its trace $\text{Tr}(A) = \sum_{i=1}^{n} A_{ii}$, the Hutchinson Estimator 
+can be calculated as
+
+\begin{align}
+    \text{Tr}(A) \approx \frac{1}{m} \sum_{j=1}^{m} z_{j}^{\top} Az_j
+\end{align}
+
+where $z_j \in \mathbb{R}^n$ are independent random vectors sampled from a distribution such that $\mathbb{E}[z_jz_j^\top] = I_n$ is the identity  matrix.
+
+\begin{enumerate}[label=(\alph*)]
+    \item \input{03-score-diffusion/01-exact-score}
+
+    \item \input{03-score-diffusion/02-sliced-score}
+
+    \item \input{03-score-diffusion/03-denoising-score}
+\end{enumerate}
