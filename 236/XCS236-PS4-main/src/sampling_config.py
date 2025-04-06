@@ -18,6 +18,7 @@ class Config:
     device: str = "cpu"
     seed: int = 42
     image_path: str = ""
+    num_steps: int = 1000
 
     def __post_init__(self):
         if self.save_dir == Path(""):

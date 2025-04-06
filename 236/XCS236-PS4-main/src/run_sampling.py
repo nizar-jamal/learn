@@ -70,8 +70,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--num_steps",
         type=int,
-        default=1000,
-        help="Seed for reproducibility",
+        default=0,
+        help="Number of steps for sampling",
     )
     parser.add_argument(
         "--image_path",
@@ -79,7 +79,12 @@ def parse_args() -> argparse.Namespace:
         default="",
         help="Image path for inpainting",
     )
-    return parser.parse_args()
+    retval = parser.parse_args()
+    if retval.experiment == "ddim" and retval.num_steps == 0:
+        retval.num_steps = 10
+    if retval.experiment == "ddpm" and retval.num_steps == 0:
+        retval.num_steps = 1000
+    return retval
 
 
 @dataclass
@@ -362,6 +367,7 @@ def main() -> None:
             save_dir=Path(args.save_dir),
             seed=args.seed,
             image_path=args.image_path,
+            num_steps=args.num_steps,
         )
 
         logger.info(f"Running {config.experiment} experiment...")
@@ -388,7 +394,7 @@ def main() -> None:
         scheduler_data = scheduler_params.build_inference_scheduler_parameters()
 
         # Common configuration
-        experiment_config = get_experiment_config(config.experiment)
+        experiment_config = get_experiment_config(config.experiment, config.num_steps)
 
         # Run and Save DDIM Images
         logger.info(f"Running {config.experiment.upper()} inference...")

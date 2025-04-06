@@ -89,12 +89,12 @@ def read_and_format_image(path: str, device: str = "cpu") -> Tensor:
     return image
 
 
-def get_experiment_config(experiment_name: str = "ddim"):
+def get_experiment_config(experiment_name: str = "ddim", num_steps:int = 10) -> InferenceConfig:
     config = get_config()
     if experiment_name == "ddim":
-        return InferenceConfig(num_steps=10, eta=0.0, seed=config.seed)
+        return InferenceConfig(num_steps, eta=0.0, seed=config.seed)
     elif experiment_name in ["ddpm", "inpaint"]:
-        return InferenceConfig(num_steps=1000, seed=config.seed)
+        return InferenceConfig(num_steps, seed=config.seed)
     else:
         raise ValueError("Unknown experiment type. Choose 'ddim', 'ddpm' or 'inpaint'.")
 

@@ -148,7 +148,7 @@ def predict_sample_direction(
         Tensor: The predicted sample direction.
     """
     ### START CODE HERE ###
-    sample_direction: Tensor = (-std * predicted_noise) / torch.sqrt(torch.tensor(alphas_bars_prev))
+    sample_direction: Tensor = ((1 - torch.tensor(alphas_bars_prev) - std**2).sqrt() * predicted_noise)
     return sample_direction
     ### END CODE HERE ###
 
