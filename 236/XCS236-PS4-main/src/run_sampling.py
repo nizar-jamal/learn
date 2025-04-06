@@ -68,6 +68,12 @@ def parse_args() -> argparse.Namespace:
         help="Seed for reproducibility",
     )
     parser.add_argument(
+        "--num_steps",
+        type=int,
+        default=1000,
+        help="Seed for reproducibility",
+    )
+    parser.add_argument(
         "--image_path",
         type=str,
         default="",
